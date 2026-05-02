@@ -9,6 +9,7 @@ export interface EmailData {
   startDate?: string;
   scholarshipDate?: string;
   scholarshipDecisionDate?: string;
+  orientationDate?: string;
   communityWhatsappLink?: string;
   communityTelegramLink?: string;
   paymentType?: "Fully Paid" | "1st Installment" | "2nd Installment";
@@ -208,7 +209,7 @@ export function getGroupInfoForCourse(courseName?: string) {
 export function getEmailSubject(emailType: string, data: EmailData) {
   switch (emailType) {
     case "welcome":
-      return `Welcome to Tech Trailblazer Academy, ${data.studentName}`;
+      return `Scholarship Application Confirmed and now under Review (IMPORTANT INFO, READ CAREFULLY)`;
     case "payment_confirmation":
       if (data.paymentType === "Fully Paid") {
         return `Payment Confirmed - Full Tuition Received (${normalizeCourseName(data.courseName)})`;
@@ -228,25 +229,36 @@ export const emailTemplates = {
     (() => {
       const awardMailDate = String(data.scholarshipDecisionDate || data.scholarshipDate || "4th December, 2025");
       const classStartDate = String(data.startDate || KICKOFF_DATE);
+      const orientationDate = String(data.orientationDate || "20th May, 2026 at 10:00 AM");
       const whatsappLink = String(data.communityWhatsappLink || data.groupLink || "https://chat.whatsapp.com/Bi5XuFToVdjBPRvIawWz5W");
 
       return baseShell({
-        title: "Welcome to Tech Trailblazer Academy",
-        preheader: `${data.studentName}, congratulations. Your application has been received and your scholarship process has started.`,
+        title: "Congratulations! You've been selected for our Tech Scholarship Program",
+        preheader: `${data.studentName}, your scholarship application has been officially approved!`,
         body: `
-          <p style="margin:0 0 12px 0;font-size:16px;line-height:1.7;color:#111827;">Hey ${data.studentName},</p>
-          <p style="margin:0 0 20px 0;font-size:16px;line-height:1.8;color:#111827;"><strong>Congratulations - you did it. 🎉</strong></p>
+          <p style="margin:0 0 12px 0;font-size:16px;line-height:1.7;color:#111827;">Dear ${data.studentName},</p>
+          <p style="margin:0 0 20px 0;font-size:16px;line-height:1.8;color:#111827;"><strong>Congratulations! You've been selected for our Tech Scholarship Program 🎉</strong></p>
 
           <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            Your application for the Tech Trailblazer Academy Scholarship Bootcamp has been successfully received, and we are thrilled to have you on this journey.
+            I am thrilled to inform you that your application to join our scholarship program has been officially approved. Out of a highly competitive pool of applicants, your passion for technology and your commitment to growth truly stood out.
           </p>
           <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            While we review your application, your decision today to begin your journey in <strong>${normalizeCourseName(data.courseName) || "your selected track"}</strong> is a bold step toward a better future. ${courseCareerHint(data.courseName)}
+            Choosing to learn a new tech skill is a significant step toward shaping your future, and we are honored to support you on this journey. This scholarship is designed to provide you with the resources, mentorship, and community support you need to excel in today's digital landscape.
           </p>
           <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            Thousands of Africans across multiple countries have taken this same step and gone on to build thriving careers in tech. Now, your next chapter begins.
+            Your selected track in <strong>${normalizeCourseName(data.courseName) || "your chosen field"}</strong> will equip you with cutting-edge skills. ${courseCareerHint(data.courseName)}
           </p>
-
+        
+          <p style="margin:0 0 10px 0;font-size:16px;line-height:1.8;color:#111827;"><strong>Next Steps to Get Started:</strong></p>
+          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
+            To confirm your spot and begin your journey, please take note of the following:
+          </p>
+          <div style="margin:0 0 20px 0;padding:16px;border:1px solid #d1fae5;border-radius:8px;background:#ecfdf5;">
+            <p style="margin:0 0 8px 0;font-size:14px;color:#065f46;"><strong>• Orientation Session:</strong> ${orientationDate}</p>
+            <p style="margin:0 0 8px 0;font-size:14px;color:#065f46;"><strong>• Platform Access:</strong> You will receive a separate email shortly with your login credentials and setup instructions.</p>
+            <p style="margin:0;font-size:14px;color:#065f46;"><strong>• Required Materials:</strong> Ensure you have access to a reliable computer and a stable internet connection.</p>
+          </div>
+        
           <p style="margin:0 0 10px 0;font-size:15px;line-height:1.9;color:#111827;"><strong>Let us show you what is possible:</strong></p>
           <ul style="margin:0 0 18px 0;padding-left:20px;color:#111827;font-size:15px;line-height:1.9;">
             <li style="margin-bottom:8px;"><strong>Toluwani</strong> built a real-time intelligent payment platform during the scholarship program.</li>
@@ -257,27 +269,10 @@ export const emailTemplates = {
           </ul>
 
           <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            These are not just stories. They are proof that with the right support, right training, and right mindset, transformation is possible.
-          </p>
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            Our tracks include Data Analytics, Frontend Development, Business Analysis, Product Design (UI/UX), Mobile App Development, Backend Development, Product Management, Ethical Hacking, Cybersecurity, Virtual Assistance, Cloud Computing, Technical Writing, Digital Marketing, Web3, Artificial Intelligence, and Data Science.
-          </p>
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            At Tech Trailblazer Academy, we do not just teach. We transform, and we believe access to quality tech education and resources should be available to everyone regardless of financial background.
-          </p>
-
-          <p style="margin:0 0 10px 0;font-size:16px;line-height:1.8;color:#111827;"><strong>${data.studentName}, what happens next?</strong></p>
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            Over the next few days, we will share details about your scholarship process, eligibility, important milestones, and how to maximize your chances. For now, relax and get ready - your journey has started.
-          </p>
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            After the Scholarship Award mail is sent, you must confirm your status if selected within the acceptance window to stay enrolled in the scholarship cohort.
+            We believe that with the right skills, you can solve real-world problems and lead the next wave of innovation. Get ready to work hard, stay curious, and push the boundaries of what you thought possible.
           </p>
           <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
             Classes are scheduled to commence on <strong>${classStartDate}</strong>. Get ready for an immersive, hands-on experience designed to transform your career.
-          </p>
-          <p style="margin:0 0 20px 0;font-size:15px;line-height:1.9;color:#111827;">
-            Please note that selection is competitive, and final acceptance depends on available sponsorship slots and review outcomes.
           </p>
 
           <p style="margin:0 0 10px 0;font-size:14px;line-height:1.9;color:#111827;">
@@ -293,8 +288,8 @@ export const emailTemplates = {
               </span>
             </a>
           </div>
-
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">Wishing you the very best on this journey.</p>
+        
+          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">Welcome to the community! We can't wait to see what you will build.</p>
           <p style="margin:0;font-size:15px;line-height:1.9;color:#111827;">
             Warm regards,<br>
             Programs Team<br>

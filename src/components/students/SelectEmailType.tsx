@@ -15,8 +15,8 @@ export function SelectEmailType({ isOpen, onClose, onEmailTypeSelect, studentNam
   const emailTypes = [
     {
       id: "welcome",
-      name: "Welcome Email",
-      description: "Professional onboarding email with class kickoff and track-specific career direction."
+      name: "Scholarship Acceptance Email",
+      description: "Scholarship acceptance email with professional onboarding and personalized course-career context."
     },
     {
       id: "payment_confirmation",
@@ -84,7 +84,7 @@ export function SelectEmailType({ isOpen, onClose, onEmailTypeSelect, studentNam
               </button>
             ))}
           </div>
-
+        
           {/* Footer */}
           <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-600">
             <button

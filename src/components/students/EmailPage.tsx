@@ -43,6 +43,8 @@ export function EmailPage() {
     totalPages: 1,
     total: 0,
   });
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [emailQuickActions, setEmailQuickActions] = useState<{[key: string]: boolean}>({});
   const [selectedHistoryEmail, setSelectedHistoryEmail] = useState<SentEmailHistoryItem | null>(null);
   const studentItemsPerPage = 20;
   const historyItemsPerPage = 20;
@@ -132,6 +134,34 @@ export function EmailPage() {
     }
   }, [emailMessage]);
 
+  // Keyboard shortcuts for quick actions
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only trigger when not typing in input fields
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+      
+      // Ctrl/Cmd + E to focus search
+      if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+        e.preventDefault();
+        const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
+        searchInput?.focus();
+      }
+      
+      // Escape to close modals
+      if (e.key === 'Escape') {
+        if (showSelectEmailModal) setShowSelectEmailModal(false);
+        if (showConfirmEmailModal) setShowConfirmEmailModal(false);
+        if (showPaymentTypeModal) setShowPaymentTypeModal(false);
+        if (selectedHistoryEmail) setSelectedHistoryEmail(null);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showSelectEmailModal, showConfirmEmailModal, showPaymentTypeModal, selectedHistoryEmail]);
+
   const filteredStudents = students.filter(
     (student) =>
       student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -201,9 +231,71 @@ export function EmailPage() {
     }
   };
 
-  const handleSendEmailClick = (student: Student) => {
+  const handleSendEmailClick = (student: Student, emailType?: string) => {
     setSelectedStudent(student);
-    setShowSelectEmailModal(true);
+    if (emailType) {
+      // Direct send for quick actions
+      sendEmailDirectly(student, emailType);
+    } else {
+      // Show modal for full selection
+      setShowSelectEmailModal(true);
+    }
+  };
+
+  const sendEmailDirectly = async (student: Student, emailType: string) => {
+    setIsSendingEmail(true);
+    try {
+      const currentPlan = getStudentPaymentPlan(student.originalId);
+      const currentPlanAmounts = getPaymentPlanAmounts(currentPlan);
+      
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: student.email,
+          emailType: emailType,
+          studentId: student.originalId,
+          data: {
+            studentName: student.name,
+            courseName: student.course || 'Course',
+            amountPaid: currentPlanAmounts?.amountPaid ?? student.amountPaid ?? 0,
+            paymentDate: new Date().toLocaleDateString('en-GB'),
+            startDate: '20th May, 2026',
+            balanceRemaining: currentPlanAmounts?.balanceRemaining ?? student.balanceRemaining ?? 0,
+            paymentPlan: currentPlan,
+            resumptionDate: '20th May, 2026',
+            lastProgress: student.lastProgress || 'Not started',
+          },
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setEmailMessage({
+          type: "success",
+          text: `${emailType === "welcome" ? "Scholarship Acceptance" : emailType === "payment_confirmation" ? "Payment confirmation" : "Group redirection"} email sent successfully to ${student.name}.`,
+        });
+        // Refresh email history if it's being shown
+        if (showEmailHistory) {
+          void loadEmailHistory(historyPagination.page, searchTerm);
+        }
+      } else {
+        setEmailMessage({
+          type: "error",
+          text: `Failed to send email: ${result.error || "Unknown error."}`,
+        });
+      }
+    } catch {
+      setEmailMessage({
+        type: "error",
+        text: "Failed to send email. Please try again.",
+      });
+    } finally {
+      setIsSendingEmail(false);
+    }
   };
 
   const currentSelectedPlan = selectedStudent
@@ -294,7 +386,7 @@ export function EmailPage() {
       if (response.ok) {
         setEmailMessage({
           type: "success",
-          text: `${selectedEmailType === "welcome" ? "Welcome" : selectedEmailType === "payment_confirmation" ? "Payment confirmation" : "Group redirection"} email sent successfully to ${selectedStudent?.name}.`,
+          text: `${selectedEmailType === "welcome" ? "Scholarship Acceptance" : selectedEmailType === "payment_confirmation" ? "Payment confirmation" : "Group redirection"} email sent successfully to ${selectedStudent?.name}.`,
         });
       } else {
         setEmailMessage({
@@ -346,7 +438,7 @@ export function EmailPage() {
             <input
               type="text"
               className="block w-full pl-10 pr-3 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-              placeholder={showEmailHistory ? "Search sent emails by name, email, type..." : "Search by name or email..."}
+              placeholder={showEmailHistory ? "Search sent emails by name, email, type..." : "Search by name or email... (Ctrl+E)"}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -491,15 +583,73 @@ export function EmailPage() {
                           </div>
                         </div>
                       </div>
-                      <button 
-                        onClick={() => handleSendEmailClick(student)}
-                        className="w-full sm:w-auto px-4 py-2 bg-transparent hover:bg-green-50 text-green-600 border border-green-600 hover:border-green-700 text-sm font-medium rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 dark:text-green-400 dark:border-green-400 dark:hover:bg-green-900/20"
-                      >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                        Send Email
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <div className="relative group">
+                          <button 
+                            onClick={() => handleSendEmailClick(student)}
+                            disabled={isSendingEmail}
+                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {isSendingEmail ? (
+                              <>
+                                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Sending...
+                              </>
+                            ) : (
+                              <>
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                                Send Email
+                              </>
+                            )}
+                          </button>
+                          
+                          {/* Quick Actions Dropdown */}
+                          <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                            <div className="py-1">
+                              <button
+                                onClick={() => handleSendEmailClick(student, 'welcome')}
+                                disabled={isSendingEmail}
+                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 disabled:opacity-50"
+                              >
+                                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                                Welcome Email
+                              </button>
+                              <button
+                                onClick={() => handleSendEmailClick(student, 'group_redirection')}
+                                disabled={isSendingEmail}
+                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 disabled:opacity-50"
+                              >
+                                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                                Join Group
+                              </button>
+                              <button
+                                onClick={() => handleSendEmailClick(student, 'payment_confirmation')}
+                                disabled={isSendingEmail}
+                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 disabled:opacity-50"
+                              >
+                                <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                                Payment Confirmation
+                              </button>
+                              <div className="border-t border-gray-200 dark:border-gray-600 my-1"></div>
+                              <button
+                                onClick={() => handleSendEmailClick(student)}
+                                disabled={isSendingEmail}
+                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 disabled:opacity-50"
+                              >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                </svg>
+                                More Options
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                     );

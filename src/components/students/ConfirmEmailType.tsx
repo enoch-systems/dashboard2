@@ -34,8 +34,8 @@ export function ConfirmEmailType({
   const getEmailTypeConfig = (type: string) => {
     const configs = {
       welcome: {
-        title: "Welcome Email",
-        description: "Professional onboarding email with kickoff details and personalized course-career context."
+        title: "Scholarship Acceptance Email",
+        description: "Scholarship acceptance email with professional onboarding and personalized course-career context."
       },
       payment_confirmation: {
         title: "Payment Confirmation Email",
