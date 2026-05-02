@@ -106,9 +106,11 @@ export function EmailPage() {
         });
       } catch (error) {
         console.error("Error loading email history:", error);
-        setEmailMessage({
-          type: "error",
-          text: "Failed to load sent email history.",
+        setHistoryItems([]);
+        setHistoryPagination({
+          page: 1,
+          totalPages: 1,
+          total: 0,
         });
       } finally {
         setHistoryLoading(false);
@@ -491,7 +493,10 @@ export function EmailPage() {
               setShowEmailHistory(next);
               if (next) {
                 setCurrentPage(1);
-                void loadEmailHistory(1, searchTerm);
+                // Use setTimeout to ensure state is updated before loading
+                setTimeout(() => {
+                  void loadEmailHistory(1, searchTerm);
+                }, 0);
               } else {
                 // Refresh the entire browser when going back to student list
                 window.location.reload();
