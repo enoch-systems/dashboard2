@@ -57,9 +57,10 @@ export function StudentManagement() {
 
     return result.sort((firstStudent, secondStudent) => {
       if (sortOption === "latest") {
-        // Use id for sorting (id is assigned based on created_at order from DB)
-        // This ensures consistency with the number sequence shown in the UI
-        return secondStudent.id - firstStudent.id;
+        return (
+          new Date(secondStudent.timestamp).getTime() -
+          new Date(firstStudent.timestamp).getTime()
+        );
       }
 
       return firstStudent.name.localeCompare(secondStudent.name);

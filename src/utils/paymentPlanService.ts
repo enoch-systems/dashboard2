@@ -125,12 +125,15 @@ export class PaymentPlanService {
         // Fallback to direct table update
         const { error: updateError } = await supabase
           .from('students')
-          .update({ 
-            payment_plan: normalizedPlan,
-            amount_paid: paymentAmounts?.amountPaid ?? 0,
-            balance_remaining: paymentAmounts?.balanceRemaining ?? 0,
-            updated_at: new Date().toISOString()
-          } as any)
+          .update(
+            // @ts-ignore - Supabase type inference issue
+            {
+              payment_plan: normalizedPlan,
+              amount_paid: paymentAmounts?.amountPaid ?? 0,
+              balance_remaining: paymentAmounts?.balanceRemaining ?? 0,
+              updated_at: new Date().toISOString()
+            }
+          )
           .eq('id', studentId);
 
         if (updateError) {

@@ -82,7 +82,10 @@ export async function POST(request: NextRequest) {
 
     const { data, error } = await supabaseAdmin
       .from('payment_receipts')
-      .insert(paymentReceipt)
+      .insert(
+        // @ts-ignore - Supabase type inference issue
+        paymentReceipt
+      )
       .select()
       .single();
 
