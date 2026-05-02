@@ -587,71 +587,28 @@ export function EmailPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <div className="relative group">
-                          <button 
-                            onClick={() => handleSendEmailClick(student)}
-                            disabled={isSendingEmail}
-                            className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            {isSendingEmail ? (
-                              <>
-                                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Sending...
-                              </>
-                            ) : (
-                              <>
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                                Send Email
-                              </>
-                            )}
-                          </button>
-                          
-                          {/* Quick Actions Dropdown */}
-                          <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-                            <div className="py-1">
-                              <button
-                                onClick={() => handleSendEmailClick(student, 'welcome')}
-                                disabled={isSendingEmail}
-                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 disabled:opacity-50"
-                              >
-                                <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                                Welcome Email
-                              </button>
-                              <button
-                                onClick={() => handleSendEmailClick(student, 'group_redirection')}
-                                disabled={isSendingEmail}
-                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 disabled:opacity-50"
-                              >
-                                <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                                Join Group
-                              </button>
-                              <button
-                                onClick={() => handleSendEmailClick(student, 'payment_confirmation')}
-                                disabled={isSendingEmail}
-                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 disabled:opacity-50"
-                              >
-                                <span className="w-2 h-2 bg-yellow-500 rounded-full"></span>
-                                Payment Confirmation
-                              </button>
-                              <div className="border-t border-gray-200 dark:border-gray-600 my-1"></div>
-                              <button
-                                onClick={() => handleSendEmailClick(student)}
-                                disabled={isSendingEmail}
-                                className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 disabled:opacity-50"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                                </svg>
-                                More Options
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+                        <button 
+                          onClick={() => handleSendEmailClick(student)}
+                          disabled={isSendingEmail}
+                          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isSendingEmail ? (
+                            <>
+                              <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Sending...
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                              </svg>
+                              Send Email
+                            </>
+                          )}
+                        </button>
                       </div>
                     </div>
                   </div>
