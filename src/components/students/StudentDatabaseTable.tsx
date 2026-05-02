@@ -226,9 +226,7 @@ export function StudentDatabaseTable() {
   // Sort students by latest join or by name
   const sortedStudents = [...filteredStudents].sort((a, b) => {
     if (sortOption === "latest") {
-      // Use id for sorting (id is assigned based on created_at order from DB)
-      // This ensures consistency with the number sequence shown in the UI
-      return b.id - a.id;
+      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
     }
 
     return a.name.localeCompare(b.name);
@@ -480,10 +478,7 @@ export function StudentDatabaseTable() {
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className="w-8 text-sm text-gray-900 dark:text-gray-200 font-medium">
-                        {sortOption === "latest" 
-                          ? sortedStudents.length - indexOfFirstStudent - index
-                          : indexOfFirstStudent + index + 1
-                        }
+                        {sortedStudents.length - (indexOfFirstStudent + index)}
                       </div>
                       <div>
                         <div className="text-sm font-medium text-gray-900 dark:text-white">
@@ -692,10 +687,7 @@ export function StudentDatabaseTable() {
                 {currentStudents.map((student, index) => (
                   <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-150">
                     <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
-                      {sortOption === "latest" 
-                        ? sortedStudents.length - indexOfFirstStudent - index
-                        : indexOfFirstStudent + index + 1
-                      }
+                      {sortedStudents.length - (indexOfFirstStudent + index)}
                     </td>
                     <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900 dark:text-white">
