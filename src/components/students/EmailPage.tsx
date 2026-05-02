@@ -492,6 +492,9 @@ export function EmailPage() {
               if (next) {
                 setCurrentPage(1);
                 void loadEmailHistory(1, searchTerm);
+              } else {
+                // Refresh the entire browser when going back to student list
+                window.location.reload();
               }
             }}
             className="w-full sm:ml-auto sm:w-auto rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 hover:shadow dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
