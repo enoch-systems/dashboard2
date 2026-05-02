@@ -209,7 +209,7 @@ export function getGroupInfoForCourse(courseName?: string) {
 export function getEmailSubject(emailType: string, data: EmailData) {
   switch (emailType) {
     case "welcome":
-      return `Scholarship Application Confirmed and now under Review (IMPORTANT INFO, READ CAREFULLY)`;
+      return `Scholarship Application Confirmed (IMPORTANT INFO, READ CAREFULLY)`;
     case "payment_confirmation":
       if (data.paymentType === "Fully Paid") {
         return `Payment Confirmed - Full Tuition Received (${normalizeCourseName(data.courseName)})`;
