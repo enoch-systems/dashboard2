@@ -4,6 +4,7 @@ import { fetchStudents, Student } from "@/data/students";
 import { SelectEmailType } from "./SelectEmailType";
 import { ConfirmEmailType } from "./ConfirmEmailType";
 import { PaymentTypeSelection } from "./PaymentTypeSelection";
+import { EmailFilterButton } from "./EmailFilterButton";
 import { usePaymentPlan } from "@/context/PaymentPlanContext";
 import { getPaymentPlanAmounts } from "@/utils/paymentPlanService";
 import { getGroupInfoForCourse, normalizeCourseName } from "@/lib/email-templates";
@@ -20,6 +21,7 @@ interface SentEmailHistoryItem {
   html: string;
   sentAt: string;
 }
+
 
 export function EmailPage() {
   const { getStudentPaymentPlan } = usePaymentPlan();
@@ -46,6 +48,16 @@ export function EmailPage() {
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const [emailQuickActions, setEmailQuickActions] = useState<{[key: string]: boolean}>({});
   const [selectedHistoryEmail, setSelectedHistoryEmail] = useState<SentEmailHistoryItem | null>(null);
+  const [studentsWithoutEmails, setStudentsWithoutEmails] = useState<Student[]>([]);
+  const [studentsWithoutEmailsLoading, setStudentsWithoutEmailsLoading] = useState(false);
+  const [studentsWithoutEmailsPagination, setStudentsWithoutEmailsPagination] = useState({
+    page: 1,
+    totalPages: 1,
+    total: 0,
+  });
+  const [emailFilters, setEmailFilters] = useState({
+    status: "all" as "all" | "sent" | "students_without_emails",
+  });
   const studentItemsPerPage = 20;
   const historyItemsPerPage = 20;
 
@@ -88,8 +100,20 @@ export function EmailPage() {
     async (page = 1, query = searchTerm) => {
       try {
         setHistoryLoading(true);
+        
+        // Build filter parameters
+        const filterParams = new URLSearchParams();
+        filterParams.set('page', page.toString());
+        filterParams.set('limit', historyItemsPerPage.toString());
+        filterParams.set('query', query);
+        filterParams.set('_t', Date.now().toString());
+        
+        if (emailFilters.status !== "all") {
+          filterParams.set('status', emailFilters.status);
+        }
+
         const response = await fetch(
-          `/api/email-history?page=${page}&limit=${historyItemsPerPage}&query=${encodeURIComponent(query)}&_t=${Date.now()}`,
+          `/api/email-history?${filterParams.toString()}`,
           { cache: "no-store" },
         );
         const result = await response.json().catch(() => null);
@@ -116,8 +140,71 @@ export function EmailPage() {
         setHistoryLoading(false);
       }
     },
-    [searchTerm],
+    [searchTerm, emailFilters, historyItemsPerPage],
   );
+
+  const loadStudentsWithoutEmails = useCallback(
+    async (page = 1, query = searchTerm) => {
+      try {
+        setStudentsWithoutEmailsLoading(true);
+        
+        const filterParams = new URLSearchParams();
+        filterParams.set('page', page.toString());
+        filterParams.set('limit', studentItemsPerPage.toString());
+        filterParams.set('query', query);
+        filterParams.set('_t', Date.now().toString());
+        filterParams.set('_cache_bust', Math.random().toString(36).substring(7));
+
+        const response = await fetch(
+          `/api/students-without-emails?${filterParams.toString()}`,
+          { 
+            cache: "no-store",
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            }
+          },
+        );
+        const result = await response.json().catch(() => null);
+
+        if (!response.ok || !result?.success) {
+          throw new Error(result?.error || "Failed to load students without emails.");
+        }
+
+        setStudentsWithoutEmails(result.data || []);
+        setStudentsWithoutEmailsPagination({
+          page: result.pagination?.page || page,
+          totalPages: result.pagination?.totalPages || 1,
+          total: result.pagination?.total || 0,
+        });
+      } catch (error) {
+        console.error("Error loading students without emails:", error);
+        setStudentsWithoutEmails([]);
+        setStudentsWithoutEmailsPagination({
+          page: 1,
+          totalPages: 1,
+          total: 0,
+        });
+      } finally {
+        setStudentsWithoutEmailsLoading(false);
+      }
+    },
+    [searchTerm, studentItemsPerPage],
+  );
+
+  // Reset email history page when filters change
+  useEffect(() => {
+    if (showEmailHistory) {
+      if (emailFilters.status === "students_without_emails") {
+        setStudentsWithoutEmailsPagination(prev => ({ ...prev, page: 1 }));
+        void loadStudentsWithoutEmails(1, searchTerm);
+      } else {
+        setHistoryPagination(prev => ({ ...prev, page: 1 }));
+        void loadEmailHistory(1, searchTerm);
+      }
+    }
+  }, [emailFilters, showEmailHistory, searchTerm, loadEmailHistory, loadStudentsWithoutEmails]);
 
   useEffect(() => {
     if (!showEmailHistory) {
@@ -199,8 +286,13 @@ export function EmailPage() {
 
   const handlePageChange = (pageNumber: number) => {
     if (showEmailHistory) {
-      setHistoryPagination((prev) => ({ ...prev, page: pageNumber }));
-      void loadEmailHistory(pageNumber, searchTerm);
+      if (emailFilters.status === "students_without_emails") {
+        setStudentsWithoutEmailsPagination((prev) => ({ ...prev, page: pageNumber }));
+        void loadStudentsWithoutEmails(pageNumber, searchTerm);
+      } else {
+        setHistoryPagination((prev) => ({ ...prev, page: pageNumber }));
+        void loadEmailHistory(pageNumber, searchTerm);
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -486,6 +578,12 @@ export function EmailPage() {
               </svg>
             </div>
           </div>
+          {showEmailHistory && (
+            <EmailFilterButton
+              onFilterChange={(filters) => setEmailFilters(filters)}
+              currentFilters={emailFilters}
+            />
+          )}
           <button
             type="button"
             onClick={() => {
@@ -563,7 +661,10 @@ export function EmailPage() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                       <div className="flex items-center w-full sm:w-auto">
                         <div className="w-8 text-sm text-gray-900 dark:text-gray-200 font-medium flex-shrink-0">
-                          {indexOfFirstStudent + index + 1}
+                          {sortOption === "latest" 
+                            ? filteredStudents.length - indexOfFirstStudent - index
+                            : indexOfFirstStudent + index + 1
+                          }
                         </div>
                         <div className="h-10 w-10 flex-shrink-0 ml-4">
                           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black text-white text-sm font-medium">
@@ -648,46 +749,98 @@ export function EmailPage() {
             </>
           ) : (
             <div className="max-h-[560px] overflow-y-auto">
-              {historyLoading ? (
-                <div className="flex items-center justify-center py-16">
-                  <div className="h-10 w-10 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
-                </div>
-              ) : historyItems.length ? (
-                <div className="divide-y divide-gray-200 dark:divide-gray-700">
-                  {historyItems.map((item, index) => (
-                    <div
-                      key={item.id}
-                      className="p-4 sm:p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                    >
-                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="min-w-0">
-                          <p className="text-xs text-gray-500 dark:text-gray-400">#{Math.max(1, historyPagination.total - ((historyPagination.page - 1) * historyItemsPerPage + index))}</p>
-                          <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{item.studentName}</p>
-                          <p className="truncate text-xs text-gray-500 dark:text-gray-400">{item.studentEmail}</p>
-                          <div className="mt-1 flex flex-wrap items-center gap-2">
-                            <span className="inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-[11px] font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
-                              {item.emailType.replace(/_/g, " ")}
-                            </span>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
-                              {new Date(item.sentAt).toLocaleString()}
-                            </span>
+              {emailFilters.status === "students_without_emails" ? (
+                studentsWithoutEmailsLoading ? (
+                  <div className="flex items-center justify-center py-16">
+                    <div className="h-10 w-10 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+                  </div>
+                ) : studentsWithoutEmails.length ? (
+                  <div className="divide-y divide-gray-200 dark:divide-gray-700">
+                    {studentsWithoutEmails.map((student, index) => {
+                      const currentPlan = getStudentPaymentPlan(student.originalId);
+                      return (
+                        <div
+                          key={student.id}
+                          className="p-4 sm:p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="min-w-0">
+                                                            <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{student.name}</p>
+                              <p className="truncate text-xs text-gray-500 dark:text-gray-400">{student.email}</p>
+                              <div className="mt-1 flex flex-wrap items-center gap-2">
+                                <div className="text-xs text-gray-400 dark:text-gray-500 truncate">
+                                  {student.course}
+                                </div>
+                                <span className={`inline-flex rounded-full px-2 py-0.5 text-[11px] font-semibold ${getPaymentPlanBadgeClasses(currentPlan)}`}>
+                                  {currentPlan}
+                                </span>
+                                <span className="inline-flex rounded-full bg-red-100 px-2 py-0.5 text-[11px] font-semibold text-red-700 dark:bg-red-900/30 dark:text-red-300">
+                                  No Email Sent
+                                </span>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleSendEmailClick(student)}
+                              disabled={isSendingEmail}
+                              className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              Send Email
+                            </button>
                           </div>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => setSelectedHistoryEmail(item)}
-                          className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600"
-                        >
-                          View Email
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="py-14 text-center text-sm text-gray-500 dark:text-gray-400">
+                    All students have received emails!
+                  </div>
+                )
               ) : (
-                <div className="py-14 text-center text-sm text-gray-500 dark:text-gray-400">
-                  No sent email history found for this search.
-                </div>
+                <>
+                  {historyLoading ? (
+                    <div className="flex items-center justify-center py-16">
+                      <div className="h-10 w-10 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+                    </div>
+                  ) : historyItems.length ? (
+                    <div className="divide-y divide-gray-200 dark:divide-gray-700">
+                      {historyItems.map((item, index) => (
+                        <div
+                          key={item.id}
+                          className="p-4 sm:p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="min-w-0">
+                              <p className="text-xs text-gray-500 dark:text-gray-400">#{Math.max(1, historyPagination.total - ((historyPagination.page - 1) * historyItemsPerPage + index))}</p>
+                              <p className="truncate text-sm font-semibold text-gray-900 dark:text-white">{item.studentName}</p>
+                              <p className="truncate text-xs text-gray-500 dark:text-gray-400">{item.studentEmail}</p>
+                              <div className="mt-1 flex flex-wrap items-center gap-2">
+                                <span className="inline-flex rounded-full bg-blue-100 px-2 py-0.5 text-[11px] font-semibold text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                                  {item.emailType.replace(/_/g, " ")}
+                                </span>
+                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                  {new Date(item.sentAt).toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setSelectedHistoryEmail(item)}
+                              className="inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 transition hover:bg-gray-100 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600"
+                            >
+                              View Email
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="py-14 text-center text-sm text-gray-500 dark:text-gray-400">
+                      No sent email history found for this search.
+                    </div>
+                  )}
+                </>
               )}
             </div>
           )}
@@ -731,28 +884,50 @@ export function EmailPage() {
           </div>
         )}
 
-        {showEmailHistory && historyPagination.totalPages > 1 && (
+        {showEmailHistory && (
+          (emailFilters.status === "students_without_emails" 
+            ? studentsWithoutEmailsPagination.totalPages > 1 
+            : historyPagination.totalPages > 1
+          )
+        ) && (
           <div className="flex flex-col sm:flex-row items-center justify-between px-4 sm:px-6 py-4 border-t border-gray-200 dark:border-gray-700 gap-4">
             <div className="text-sm text-gray-700 dark:text-gray-300 text-center sm:text-left">
-              Showing {(historyPagination.page - 1) * historyItemsPerPage + 1}
-              {" "}to{" "}
-              {Math.min(historyPagination.page * historyItemsPerPage, historyPagination.total)}
-              {" "}of {historyPagination.total} sent emails
+              {emailFilters.status === "students_without_emails" ? (
+                <>
+                  Showing {(studentsWithoutEmailsPagination.page - 1) * studentItemsPerPage + 1}
+                  {" "}to{" "}
+                  {Math.min(studentsWithoutEmailsPagination.page * studentItemsPerPage, studentsWithoutEmailsPagination.total)}
+                  {" "}of {studentsWithoutEmailsPagination.total} students without emails
+                </>
+              ) : (
+                <>
+                  Showing {(historyPagination.page - 1) * historyItemsPerPage + 1}
+                  {" "}to{" "}
+                  {Math.min(historyPagination.page * historyItemsPerPage, historyPagination.total)}
+                  {" "}of {historyPagination.total} sent emails
+                </>
+              )}
             </div>
             <div className="flex items-center gap-2 flex-wrap justify-center">
               <button
-                onClick={handleHistoryPrevPage}
-                disabled={historyPagination.page === 1}
+                onClick={emailFilters.status === "students_without_emails" ? handleHistoryPrevPage : handleHistoryPrevPage}
+                disabled={emailFilters.status === "students_without_emails" ? studentsWithoutEmailsPagination.page === 1 : historyPagination.page === 1}
                 className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
               >
                 Prev
               </button>
-              {Array.from({ length: historyPagination.totalPages }, (_, i) => i + 1).slice(0, 8).map((pageNumber) => (
+              {Array.from({ 
+                length: emailFilters.status === "students_without_emails" 
+                  ? studentsWithoutEmailsPagination.totalPages 
+                  : historyPagination.totalPages 
+              }, (_, i) => i + 1).slice(0, 8).map((pageNumber) => (
                 <button
                   key={pageNumber}
                   onClick={() => handlePageChange(pageNumber)}
                   className={`px-2 sm:px-3 py-1 text-sm font-medium rounded-md transition-colors duration-200 ${
-                    historyPagination.page === pageNumber
+                    (emailFilters.status === "students_without_emails" 
+                      ? studentsWithoutEmailsPagination.page 
+                      : historyPagination.page) === pageNumber
                       ? 'bg-blue-600 text-white hover:bg-blue-700'
                       : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700'
                   }`}
@@ -761,8 +936,10 @@ export function EmailPage() {
                 </button>
               ))}
               <button
-                onClick={handleHistoryNextPage}
-                disabled={historyPagination.page === historyPagination.totalPages}
+                onClick={emailFilters.status === "students_without_emails" ? handleHistoryNextPage : handleHistoryNextPage}
+                disabled={emailFilters.status === "students_without_emails" 
+                  ? studentsWithoutEmailsPagination.page === studentsWithoutEmailsPagination.totalPages 
+                  : historyPagination.page === historyPagination.totalPages}
                 className="px-3 py-1 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
               >
                 Next
