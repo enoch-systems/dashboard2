@@ -1,12 +1,8 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { fetchPaymentReceipts, markReceiptAsViewed, getViewedReceipts } from '@/lib/paymentReceiptService';
-import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const ADMIN_USER_ID = 'admin_user'; // Fixed ID for admin user
 
 interface NotificationContextType {
   viewedRequests: Set<string>;
@@ -20,20 +16,14 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [viewedRequests, setViewedRequests] = useState<Set<string>>(new Set());
   const [pendingCount, setPendingCount] = useState(0);
-  const [userId, setUserId] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const refreshPendingCount = async (
-    targetUserId: string | null = userId,
     providedViewedRequests?: Set<string>,
   ) => {
-    if (!targetUserId) {
-      setPendingCount(0);
-      return;
-    }
-
     try {
       const pendingReceipts = await fetchPaymentReceipts('pending', 200);
-      const viewedSet = providedViewedRequests ?? await getViewedReceipts(targetUserId);
+      const viewedSet = providedViewedRequests ?? viewedRequests;
       const unreadCount = pendingReceipts.filter(
         (receipt) => !viewedSet.has(receipt.id),
       ).length;
@@ -45,65 +35,53 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   };
 
   const markAsViewed = async (requestId: string) => {
-    if (!userId || !requestId || viewedRequests.has(requestId)) {
+    if (!requestId || viewedRequests.has(requestId)) {
       return;
     }
 
-    try {
-      await markReceiptAsViewed(requestId, userId);
-    } catch (error) {
-      console.error('Error marking receipt as viewed:', error);
-    }
-
+    // IMMEDIATELY update local state for instant UI feedback
     setViewedRequests((prev) => {
       const next = new Set(prev);
       next.add(requestId);
       return next;
     });
     setPendingCount((prev) => Math.max(prev - 1, 0));
+
+    // Then save to Supabase database in background
+    try {
+      await markReceiptAsViewed(requestId, ADMIN_USER_ID);
+    } catch (error) {
+      console.error('Error marking receipt as viewed in database:', error);
+    }
   };
 
-  // Load viewed receipts from database on mount and user auth change
+  // Load viewed receipts from Supabase database on mount
   useEffect(() => {
     const loadViewedReceipts = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        setUserId(user.id);
-        const viewed = await getViewedReceipts(user.id);
+      try {
+        const viewed = await getViewedReceipts(ADMIN_USER_ID);
         setViewedRequests(viewed);
-        await refreshPendingCount(user.id, viewed);
-      } else {
-        setUserId(null);
-        setViewedRequests(new Set());
-        setPendingCount(0);
+        setIsLoaded(true);
+        await refreshPendingCount(viewed);
+      } catch (error) {
+        console.error('Error loading viewed receipts from database:', error);
+        setIsLoaded(true);
       }
     };
 
     loadViewedReceipts();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setUserId(session.user.id);
-        loadViewedReceipts();
-      } else {
-        setUserId(null);
-        setViewedRequests(new Set());
-        setPendingCount(0);
-      }
-    });
-
-    return () => subscription.unsubscribe();
   }, []);
 
-  // Refresh pending count every 30 seconds
+  // Refresh pending count every 15 seconds
   useEffect(() => {
+    if (!isLoaded) return;
+    
     refreshPendingCount();
     const interval = setInterval(() => {
       refreshPendingCount();
     }, 15000);
     return () => clearInterval(interval);
-  }, [userId]);
+  }, [isLoaded]);
 
   return (
     <NotificationContext.Provider value={{

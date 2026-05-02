@@ -57,10 +57,9 @@ export function StudentManagement() {
 
     return result.sort((firstStudent, secondStudent) => {
       if (sortOption === "latest") {
-        return (
-          new Date(secondStudent.timestamp).getTime() -
-          new Date(firstStudent.timestamp).getTime()
-        );
+        // Use id for sorting (id is assigned based on created_at order from DB)
+        // This ensures consistency with the number sequence shown in the UI
+        return secondStudent.id - firstStudent.id;
       }
 
       return firstStudent.name.localeCompare(secondStudent.name);
@@ -276,7 +275,10 @@ export function StudentManagement() {
                   >
                     <div className="flex items-start gap-4">
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gray-900 text-sm font-semibold text-white dark:bg-gray-100 dark:text-gray-900">
-                        {index + 1}
+                        {sortOption === "latest" 
+                          ? filteredStudents.length - index
+                          : index + 1
+                        }
                       </div>
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">

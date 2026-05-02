@@ -1,17 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { supabaseAdmin } from '@/lib/supabase';
 import { uploadImageToCloudinary } from '@/lib/cloudinary';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-function createSupabaseAdmin() {
-  if (!supabaseUrl || !supabaseServiceKey) {
-    return null;
-  }
-
-  return createClient(supabaseUrl, supabaseServiceKey);
-}
 
 function normalizeEmail(value: string) {
   return value.trim().toLowerCase();
@@ -19,7 +8,6 @@ function normalizeEmail(value: string) {
 
 export async function POST(request: NextRequest) {
   try {
-    const supabaseAdmin = createSupabaseAdmin();
     if (!supabaseAdmin) {
       return NextResponse.json(
         { error: 'Missing required Supabase environment variables for payment receipts API.' },
@@ -32,6 +20,7 @@ export async function POST(request: NextRequest) {
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const amountRaw = (formData.get('amount') as string)?.trim();
+    const course = formData.get('course') as string || '';
     const paymentType = formData.get('paymentType') as string || 'proof_submission';
     const proofImage = formData.get('proofImage') as File;
     const amountIsNumeric = /^\d+$/.test(amountRaw || '');
@@ -61,7 +50,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Upload image to Cloudinary
-    const cloudinaryResult = await uploadImageToCloudinary(proofImage);
+    console.log('Uploading image to Cloudinary:', proofImage.name, proofImage.type, proofImage.size);
+    let cloudinaryResult;
+    try {
+      cloudinaryResult = await uploadImageToCloudinary(proofImage);
+      console.log('Cloudinary upload successful:', cloudinaryResult);
+    } catch (cloudinaryError) {
+      console.error('Cloudinary upload failed:', cloudinaryError);
+      return NextResponse.json(
+        { error: 'Failed to upload image to Cloudinary. Please try again.' },
+        { status: 500 }
+      );
+    }
 
     const normalizedEmail = normalizeEmail(email);
     // Create payment receipt record
@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
       student_name: name,
       email: normalizedEmail,
       amount,
+      course,
       payment_date: new Date().toISOString().split('T')[0],
       payment_type: paymentType,
       status: 'pending',
@@ -77,6 +78,8 @@ export async function POST(request: NextRequest) {
       original_filename: cloudinaryResult.originalFilename,
     };
 
+    console.log('Attempting to save payment receipt:', paymentReceipt);
+
     const { data, error } = await supabaseAdmin
       .from('payment_receipts')
       .insert(paymentReceipt)
@@ -84,12 +87,19 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error('Supabase error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      });
       return NextResponse.json(
-        { error: 'Failed to save payment receipt' },
+        { error: `Failed to save payment receipt: ${error.message}` },
         { status: 500 }
       );
     }
+
+    console.log('Payment receipt saved successfully:', data);
 
     return NextResponse.json({
       success: true,
@@ -108,7 +118,6 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabaseAdmin = createSupabaseAdmin();
     if (!supabaseAdmin) {
       return NextResponse.json(
         { error: 'Missing required Supabase environment variables for payment receipts API.' },

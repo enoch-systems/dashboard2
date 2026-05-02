@@ -57,6 +57,7 @@ export interface PaymentReceiptData {
   email: string;
   phone?: string;
   amount: number;
+  course?: string;
   payment_date: string;
   payment_type: string;
   status: 'pending' | 'approved' | 'rejected';

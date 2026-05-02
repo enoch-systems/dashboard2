@@ -272,7 +272,9 @@ export function EmailPage() {
   // Sort students by latest join or by name
   const sortedStudents = [...filteredStudents].sort((a, b) => {
     if (sortOption === "latest") {
-      return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      // Use id for sorting (id is assigned based on created_at order from DB)
+      // This ensures consistency with the number sequence shown in the UI
+      return b.id - a.id;
     }
 
     return a.name.localeCompare(b.name);
@@ -662,7 +664,7 @@ export function EmailPage() {
                       <div className="flex items-center w-full sm:w-auto">
                         <div className="w-8 text-sm text-gray-900 dark:text-gray-200 font-medium flex-shrink-0">
                           {sortOption === "latest" 
-                            ? filteredStudents.length - indexOfFirstStudent - index
+                            ? sortedStudents.length - indexOfFirstStudent - index
                             : indexOfFirstStudent + index + 1
                           }
                         </div>

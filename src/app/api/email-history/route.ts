@@ -18,6 +18,8 @@ export async function GET(request: NextRequest) {
     const page = Number(searchParams.get("page") || "1");
     const limit = Number(searchParams.get("limit") || "20");
     const query = (searchParams.get("query") || "").trim().toLowerCase();
+    const statusFilter = searchParams.get("status");
+    const emailTypeFilter = searchParams.get("emailType");
 
     const safePage = Number.isFinite(page) && page > 0 ? page : 1;
     const safeLimit =
@@ -32,9 +34,17 @@ export async function GET(request: NextRequest) {
       .select(
         "id, subject, message, status, sent_at, created_at, student_id, students(name, email, course)",
         { count: "exact" },
-      )
-      .eq("status", "sent");
+      );
 
+    // Apply status filter
+    if (statusFilter === "sent") {
+      historyQuery = historyQuery.eq("status", "sent");
+    } else if (statusFilter === "unsent") {
+      historyQuery = historyQuery.neq("status", "sent");
+    }
+    // If statusFilter is "all" or undefined, don't filter by status
+
+    // Apply search query
     if (query) {
       historyQuery = historyQuery.or(
         `subject.ilike.%${query}%,students.name.ilike.%${query}%,students.email.ilike.%${query}%`,
@@ -75,11 +85,19 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    const filteredTotal = count || 0;
+    // Apply email type filter after processing
+    let filteredRows = rows;
+    if (emailTypeFilter && emailTypeFilter !== "all") {
+      filteredRows = rows.filter(item => item.emailType === emailTypeFilter);
+    }
+
+    const filteredTotal = emailTypeFilter && emailTypeFilter !== "all" 
+      ? filteredRows.length 
+      : (count || 0);
 
     return NextResponse.json({
       success: true,
-      data: rows,
+      data: filteredRows,
       pagination: {
         page: safePage,
         limit: safeLimit,

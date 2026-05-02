@@ -106,7 +106,9 @@ export function PaymentChecker() {
   const handleImageClick = async (request: PaymentReceiptData) => {
     setSelectedRequest(request);
     setShowImageModal(true);
-    await markAsViewed(request.id);
+    // Mark as viewed immediately for instant UI feedback
+    // Don't await - let it happen in background
+    void markAsViewed(request.id);
     router.replace("/email-portal/payment-checker");
   };
 
@@ -234,7 +236,10 @@ export function PaymentChecker() {
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                   <div className="flex items-start flex-1 w-full sm:w-auto">
                     <div className="w-8 text-sm text-gray-900 dark:text-gray-200 font-medium mt-1 flex-shrink-0">
-                      {indexOfFirstRequest + index + 1}
+                      {sortOption === "latest" 
+                        ? filteredRequests.length - indexOfFirstRequest - index
+                        : indexOfFirstRequest + index + 1
+                      }
                     </div>
                     <div className="ml-4 flex-1 min-w-0">
                       <div className="text-sm sm:text-base font-medium text-gray-900 dark:text-white mb-2 truncate">
@@ -251,11 +256,23 @@ export function PaymentChecker() {
                         New message!
                       </div>
                     )}
+                    {/* Hide pending status badge when viewed */}
+                    {!(request.status === 'pending' && viewedRequests.has(request.id)) && (
+                      <div className="flex items-center gap-2">
+                        <span className={`inline-flex rounded-full px-2 py-1 text-xs font-medium ${getStatusColor(request.status)}`}>
+                          {request.status}
+                        </span>
+                      </div>
+                    )}
                     <button
                       onClick={() => handleImageClick(request)}
-                      className="w-full sm:w-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-200"
+                      className={`w-full sm:w-auto px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                        viewedRequests.has(request.id)
+                          ? 'bg-gray-400 hover:bg-gray-500 text-white'
+                          : 'bg-blue-600 hover:bg-blue-700 text-white'
+                      }`}
                     >
-                      View Proof
+                      {viewedRequests.has(request.id) ? 'Viewed' : 'View Proof'}
                     </button>
                   </div>
                 </div>
@@ -353,6 +370,12 @@ export function PaymentChecker() {
                     <span className="text-gray-500 dark:text-gray-400">Amount Paid:</span>
                     <span className="font-medium text-gray-900 dark:text-white">₦{selectedRequest.amount.toLocaleString()}</span>
                   </div>
+                  {selectedRequest.course && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-500 dark:text-gray-400">Course:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{selectedRequest.course}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between">
                     <span className="text-gray-500 dark:text-gray-400">Message Received On:</span>
                     <span className="font-medium text-gray-900 dark:text-white text-right">
@@ -402,8 +425,7 @@ export function PaymentChecker() {
                 )}
               </div>
 
-              
-                          </div>
+            </div>
           </div>
         </div>
       )}

@@ -60,7 +60,7 @@ export async function fetchStudents(): Promise<Student[]> {
   const { data, error } = await supabase
     .from('students')
     .select('*')
-    .order('name', { ascending: true });
+    .order('created_at', { ascending: false });
 
   if (error) {
     console.error('Error fetching students:', error);
@@ -71,14 +71,14 @@ export async function fetchStudents(): Promise<Student[]> {
     return [];
   }
 
-  return data.map(mapSupabaseStudent);
+  return data.map((student, index) => mapSupabaseStudent(student, index));
 }
 
 export async function searchStudents(searchTerm: string): Promise<Student[]> {
   const { data, error } = await supabase
     .from('students')
     .select('*')
-    .order('name', { ascending: true });
+    .order('created_at', { ascending: false });
 
   if (error) {
     console.error('Error searching students:', error);
@@ -92,7 +92,7 @@ export async function searchStudents(searchTerm: string): Promise<Student[]> {
   const normalizedSearchTerm = searchTerm.trim().toLowerCase();
 
   return data
-    .map(mapSupabaseStudent)
+    .map((student, index) => mapSupabaseStudent(student, index))
     .filter((student) => {
       return (
         student.name.toLowerCase().includes(normalizedSearchTerm) ||
