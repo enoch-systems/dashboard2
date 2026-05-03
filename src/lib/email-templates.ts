@@ -36,15 +36,54 @@ const baseShell = ({
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>${title}</title>
+  <style type="text/css">
+    /* Client-specific resets */
+    body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; outline: none; text-decoration: none; }
+    
+    /* Reset styles */
+    body { margin: 0; padding: 0; }
+    
+    /* iOS blue links fix */
+    a[x-apple-data-detectors] { color: inherit !important; text-decoration: none !important; font-size: inherit !important; font-family: inherit !important; font-weight: inherit !important; line-height: inherit !important; }
+    
+    /* Mobile responsiveness */
+    @media screen and (max-width: 600px) {
+      .email-container { width: 100% !important; max-width: 100% !important; }
+      .mobile-padding { padding: 24px 20px !important; }
+      .mobile-footer-padding { padding: 20px !important; }
+      .mobile-font { font-size: 15px !important; line-height: 1.7 !important; }
+      .mobile-heading { font-size: 16px !important; }
+      .mobile-text-small { font-size: 13px !important; }
+      .mobile-link { font-size: 14px !important; word-break: break-all !important; }
+      .mobile-hide { display: none !important; }
+    }
+    
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+      body { background-color: #1a1a1a !important; }
+      .email-bg { background-color: #2d2d2d !important; }
+      .text-color { color: #e0e0e0 !important; }
+    }
+  </style>
 </head>
-<body style="margin:0;padding:0;background:#f8f6f4;font-family:'Georgia','Times New Roman',serif;color:#2a2a2a;line-height:1.8;">
+<body style="margin:0;padding:0;background:#f8f6f4;font-family:Georgia,'Times New Roman',serif;color:#2a2a2a;line-height:1.8;">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${preheader}</div>
-  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#f8f6f4;padding:40px 20px;">
+  
+  <!--[if mso]>
+  <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="600" align="center" style="width:600px;">
+  <tr>
+  <td>
+  <![endif]-->
+  
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#f8f6f4;padding:20px 0;" class="email-bg">
     <tr>
-      <td align="center">
-        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;background:#ffffff;border:1px solid #e0dcd8;">
+      <td align="center" style="padding:0 10px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;background:#ffffff;border:1px solid #e0dcd8;" class="email-container">
           <tr>
             <td>
               <img
@@ -56,22 +95,30 @@ const baseShell = ({
             </td>
           </tr>
           <tr>
-            <td style="padding:40px 48px 32px 48px;border-bottom:3px solid #873218;">
-              ${body}
+            <td style="padding:40px 48px 32px 48px;border-bottom:3px solid #873218;" class="mobile-padding">
+              <div class="mobile-font text-color">
+                ${body}
+              </div>
             </td>
           </tr>
           <tr>
-            <td style="padding:24px 48px;background:#faf9f7;border-top:1px solid #e0dcd8;">
-              <p style="margin:0 0 4px 0;font-size:13px;color:#555;font-weight:600;letter-spacing:0.5px;">Warm regards,</p>
-              <p style="margin:0 0 2px 0;font-size:13px;color:#555;">Programs Team</p>
-              <p style="margin:0 0 16px 0;font-size:13px;color:#873218;font-weight:600;">Tech Trailblazer Academy</p>
-              <p style="margin:0;font-size:11px;color:#999;">Copyright &copy; 2026 Tech Trailblazer Academy. All rights reserved.</p>
+            <td style="padding:24px 48px;background:#faf9f7;border-top:1px solid #e0dcd8;" class="mobile-footer-padding">
+              <p style="margin:0 0 4px 0;font-size:13px;color:#555;font-weight:600;letter-spacing:0.5px;" class="mobile-text-small">Warm regards,</p>
+              <p style="margin:0 0 2px 0;font-size:13px;color:#555;" class="mobile-text-small">Programs Team</p>
+              <p style="margin:0 0 16px 0;font-size:13px;color:#873218;font-weight:600;" class="mobile-text-small">Tech Trailblazer Academy</p>
+              <p style="margin:0;font-size:11px;color:#999;" class="mobile-text-small">Copyright &copy; 2026 Tech Trailblazer Academy. All rights reserved.</p>
             </td>
           </tr>
         </table>
       </td>
     </tr>
   </table>
+  
+  <!--[if mso]>
+  </td>
+  </tr>
+  </table>
+  <![endif]-->
 </body>
 </html>
 `;
@@ -296,7 +343,7 @@ export const emailTemplates = {
               <label style="display:block;margin:0 0 8px 0;font-size:13px;font-weight:600;color:#873218;letter-spacing:0.5px;">
                 SELECT YOUR COURSE
               </label>
-              <select style="display:block;width:100%;padding:12px 16px;border:1px solid #d4c4b8;background:#ffffff;font-size:14px;color:#444;font-family:inherit;">
+              <select style="display:block;width:100%;padding:12px 16px;border:1px solid #d4c4b8;background:#ffffff;font-size:14px;color:#444;font-family:inherit;-webkit-appearance:none;-moz-appearance:none;appearance:none;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2220%22 height=%2220%22 viewBox=%220 0 24 24%22 fill=%22%23873218%22><path d=%22M7 10l5 5 5-5z%22/></svg>');background-repeat:no-repeat;background-position:right 12px center;padding-right:40px;">
                 <option value="">Choose a course...</option>
                 <option value="Cybersecurity">Cybersecurity</option>
                 <option value="Data Science">Data Science</option>
@@ -314,7 +361,7 @@ export const emailTemplates = {
             </div>
             <div style="text-align:center;margin:24px 0 0 0;">
               <a href="https://your-payment-link.com/pay?student=${data.studentName}&email=${data.email}" 
-                 style="display:inline-block;padding:14px 40px;background:#873218;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:0.5px;"
+                 style="display:inline-block;padding:14px 40px;background:#873218;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:0.5px;min-width:200px;"
                  target="_blank">
                 Complete Enrollment Payment
               </a>
@@ -325,7 +372,7 @@ export const emailTemplates = {
             
             <div style="margin:28px 0 0 0;padding:28px;background:#faf9f7;border-left:3px solid #873218;text-align:center;">
               <h3 style="margin:0 0 16px 0;font-size:13px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Submit Payment Proof</h3>
-              <a href="https://ttacademycohort1.vercel.app/payment" target="_blank" style="color:#873218;text-decoration:underline;font-size:14px;font-weight:600;">https://ttacademycohort1.vercel.app/payment</a>
+              <a href="https://ttacademycohort1.vercel.app/payment" target="_blank" class="mobile-link" style="color:#873218;text-decoration:underline;font-size:14px;font-weight:600;word-break:break-all;display:inline-block;max-width:100%;">https://ttacademycohort1.vercel.app/payment</a>
             </div>
           </div>
 
@@ -335,7 +382,7 @@ export const emailTemplates = {
               Join our professional community for program updates, networking opportunities, and mentorship sessions.
             </p>
             <div style="text-align:left;">
-              <a href="${whatsappLink}" style="display:inline-flex;align-items:center;gap:10px;padding:12px 24px;background:#25D366;color:#ffffff;text-decoration:none;font-size:13px;font-weight:600;">
+              <a href="${whatsappLink}" style="display:inline-flex;align-items:center;gap:10px;padding:12px 24px;background:#25D366;color:#ffffff;text-decoration:none;font-size:13px;font-weight:600;min-width:180px;justify-content:center;">
                 <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor">
                   <path d="M16.02 3.2C8.95 3.2 3.2 8.94 3.2 16.01c0 2.23.58 4.42 1.69 6.35L3.1 28.8l6.62-1.74a12.8 12.8 0 0 0 6.3 1.62h.01c7.06 0 12.8-5.74 12.8-12.81A12.8 12.8 0 0 0 16.02 3.2Zm0 23.36h-.01a10.52 10.52 0 0 1-5.36-1.48l-.39-.23-3.93 1.03 1.05-3.84-.25-.4a10.52 10.52 0 0 1-1.61-5.63c0-5.82 4.69-10.56 10.5-10.56 2.81 0 5.45 1.09 7.43 3.08a10.46 10.46 0 0 1 3.08 7.45c0 5.82-4.73 10.56-10.51 10.56Zm5.77-7.87c-.32-.16-1.9-.94-2.2-1.04-.3-.1-.51-.16-.73.16-.22.32-.84 1.04-1.03 1.25-.19.22-.38.24-.7.08-.32-.16-1.37-.5-2.61-1.61-.97-.86-1.62-1.93-1.81-2.25-.19-.32-.02-.5.14-.66.14-.14.32-.38.48-.56.16-.19.22-.32.32-.54.1-.22.05-.4-.03-.56-.08-.16-.73-1.76-1-2.42-.27-.64-.54-.55-.73-.56-.19-.01-.41-.01-.63-.01s-.56.08-.85.4c-.29.32-1.12 1.09-1.12 2.66 0 1.57 1.15 3.08 1.31 3.29.16.22 2.25 3.44 5.45 4.82.76.33 1.36.53 1.82.68.77.24 1.47.2 2.02.12.62-.09 1.9-.78 2.17-1.54.27-.75.27-1.4.19-1.54-.08-.14-.29-.22-.6-.37Z"/>
                 </svg>
