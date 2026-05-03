@@ -161,54 +161,54 @@ export function PaymentUploadForm() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(rgba(120,120,120,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(120,120,120,0.12)_1px,transparent_1px)] bg-[size:72px_72px]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(159,7,18,0.12),_transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(0,0,0,0.08),_transparent_30%)]" />
-        <div className="relative mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <div className="relative mx-auto max-w-4xl px-3 py-6 sm:px-4 sm:py-10 lg:px-8 lg:py-14">
           <div className="flex justify-center">
-            <div className="w-full max-w-2xl space-y-6 rounded-[30px] border border-[#9f0712]/15 bg-white/85 p-6 text-slate-900 shadow-[0_20px_60px_rgba(159,7,18,0.08)] backdrop-blur sm:p-8">
-              <div className="inline-flex items-center rounded-full border border-[#9f0712]/15 bg-[#9f0712] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-white">
+            <div className="w-full max-w-2xl space-y-6 rounded-[24px] sm:rounded-[30px] border border-[#9f0712]/15 bg-white/85 p-4 text-slate-900 shadow-[0_20px_60px_rgba(159,7,18,0.08)] backdrop-blur sm:p-8">
+              <div className="inline-flex items-center rounded-full border border-[#9f0712]/15 bg-[#9f0712] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-white">
                 Tech Trailblazer Academy
               </div>
 
               <div className="space-y-5">
-                <div className="inline-flex bg-gradient-to-r from-[#9f0712] to-[#7f000a] px-4 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white shadow-lg shadow-[#9f0712]/20">
+                <div className="inline-flex bg-gradient-to-r from-[#9f0712] to-[#7f000a] px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white shadow-lg shadow-[#9f0712]/20">
                   Payment & Proof Submission
                 </div>
                 <div className="space-y-3">
-                  <h1 className="text-4xl font-black uppercase tracking-tight text-[#9f0712] sm:text-5xl lg:text-6xl">
+                  <h1 className="text-2xl font-black uppercase tracking-tight text-[#9f0712] sm:text-4xl md:text-5xl lg:text-6xl">
                     Payment <span className="text-slate-950">& Proof</span>
                   </h1>
-                  <div className="inline-flex border-2 border-slate-900 bg-gradient-to-r from-white to-slate-50 px-5 py-2 text-lg font-black uppercase tracking-wide text-slate-950 shadow-sm">
+                  <div className="inline-flex border-2 border-slate-900 bg-gradient-to-r from-white to-slate-50 px-3 py-1.5 text-sm font-black uppercase tracking-wide text-slate-950 shadow-sm sm:px-5 sm:py-2 sm:text-lg">
                     Minimal Form
                   </div>
                 </div>
-                <div className="space-y-4 rounded-[20px] bg-gradient-to-r from-[#9f0712]/5 to-[#7f000a]/5 p-4 border border-[#9f0712]/10">
-                  <div className="space-y-5 rounded-[20px] bg-white p-6 border border-[#9f0712]/20 shadow-sm">
+                <div className="space-y-4 rounded-[20px] bg-gradient-to-r from-[#9f0712]/5 to-[#7f000a]/5 p-3 sm:p-4 border border-[#9f0712]/10">
+                  <div className="space-y-5 rounded-[20px] bg-white p-4 sm:p-6 border border-[#9f0712]/20 shadow-sm">
                     <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#9f0712] to-[#7f000a] flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#9f0712] to-[#7f000a] flex items-center justify-center flex-shrink-0">
+                        <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-bold text-slate-900">Payment Details</h3>
+                      <div className="min-w-0">
+                        <h3 className="text-base sm:text-lg font-bold text-slate-900">Payment Details</h3>
                         <p className="text-xs text-slate-500">Transfer to this account</p>
                       </div>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="bg-gradient-to-r from-slate-50 to-white rounded-2xl p-5 border-2 border-slate-100">
-                        <div className="flex items-center justify-between mb-3">
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className="bg-gradient-to-r from-slate-50 to-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border-2 border-slate-100">
+                        <div className="flex items-center justify-between mb-2 sm:mb-3">
                           <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Bank</span>
                           <span className="px-2 py-1 bg-[#9f0712]/10 text-[#9f0712] text-xs font-semibold rounded-full">MFB</span>
                         </div>
-                        <p className="text-base font-bold text-slate-800">MONIEPOINT MFB</p>
+                        <p className="text-sm sm:text-base font-bold text-slate-800">MONIEPOINT MFB</p>
                       </div>
 
-                      <div className="bg-gradient-to-r from-slate-50 to-white rounded-2xl p-5 border-2 border-slate-100">
-                        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-2">Account Name</span>
-                        <p className="text-base font-semibold text-slate-800">Precious Chibueze Amah</p>
+                      <div className="bg-gradient-to-r from-slate-50 to-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border-2 border-slate-100">
+                        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1 sm:mb-2">Account Name</span>
+                        <p className="text-sm sm:text-base font-semibold text-slate-800">Precious Chibueze Amah</p>
                       </div>
 
-                      <div className="bg-gradient-to-r from-[#9f0712]/5 to-[#7f000a]/5 rounded-2xl p-5 border-2 border-[#9f0712]/20 relative overflow-hidden">
+                      <div className="bg-gradient-to-r from-[#9f0712]/5 to-[#7f000a]/5 rounded-xl sm:rounded-2xl p-3 sm:p-5 border-2 border-[#9f0712]/20 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-20 h-20 bg-[#9f0712]/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                         <div className="relative">
                           <div className="flex items-center justify-between mb-3">
@@ -234,14 +234,14 @@ export function PaymentUploadForm() {
                               )}
                             </button>
                           </div>
-                          <p className="text-2xl font-black text-[#9f0712] tracking-wider">6729652572</p>
+                          <p className="text-xl sm:text-2xl font-black text-[#9f0712] tracking-wider">6729652572</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="relative">
-                      <div className="flex items-center gap-2 mb-5">
-                        <div className="w-1 h-5 bg-gradient-to-b from-[#9f0712] to-[#7f000a] rounded-full" />
+                      <div className="flex items-center gap-2 mb-4 sm:mb-5">
+                        <div className="w-1 h-5 bg-gradient-to-b from-[#9f0712] to-[#7f000a] rounded-full flex-shrink-0" />
                         <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wide">How to Complete Your Payment</h4>
                       </div>
 
@@ -250,18 +250,18 @@ export function PaymentUploadForm() {
                         <div className="absolute left-5 top-4 bottom-4 w-0.5 bg-gradient-to-b from-slate-200 via-[#9f0712]/20 to-slate-200" />
 
                         {/* Step 1 */}
-                        <div className="relative flex gap-4 pb-6">
+                        <div className="relative flex gap-3 sm:gap-4 pb-4 sm:pb-6">
                           <div className="relative z-10 flex-shrink-0">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#9f0712] to-[#7f000a] flex items-center justify-center shadow-lg shadow-[#9f0712]/20">
-                              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#9f0712] to-[#7f000a] flex items-center justify-center shadow-lg shadow-[#9f0712]/20">
+                              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4 4" />
                               </svg>
                             </div>
                           </div>
-                          <div className="flex-1 pt-1">
-                            <div className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+                          <div className="flex-1 pt-0.5 sm:pt-1">
+                            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border border-slate-100 shadow-sm">
                               <p className="text-sm font-semibold text-slate-800 mb-1">Make the Transfer</p>
-                              <p className="text-sm text-slate-600 leading-relaxed">
+                              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                                 Transfer <span className="font-bold text-[#9f0712]">N50,000</span> to the Moniepoint account shown above
                               </p>
                             </div>
@@ -269,35 +269,35 @@ export function PaymentUploadForm() {
                         </div>
 
                         {/* Step 2 */}
-                        <div className="relative flex gap-4 pb-6">
+                        <div className="relative flex gap-3 sm:gap-4 pb-4 sm:pb-6">
                           <div className="relative z-10 flex-shrink-0">
-                            <div className="w-10 h-10 rounded-xl bg-white border-2 border-[#9f0712]/20 flex items-center justify-center">
-                              <svg className="w-5 h-5 text-[#9f0712]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white border-2 border-[#9f0712]/20 flex items-center justify-center">
+                              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[#9f0712]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                               </svg>
                             </div>
                           </div>
-                          <div className="flex-1 pt-1">
-                            <div className="bg-white rounded-xl p-4 border border-slate-100 shadow-sm">
+                          <div className="flex-1 pt-0.5 sm:pt-1">
+                            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border border-slate-100 shadow-sm">
                               <p className="text-sm font-semibold text-slate-800 mb-1">Save Your Receipt</p>
-                              <p className="text-sm text-slate-600 leading-relaxed">Capture and save your payment receipt or screenshot</p>
+                              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">Capture and save your payment receipt or screenshot</p>
                             </div>
                           </div>
                         </div>
 
                         {/* Step 3 */}
-                        <div className="relative flex gap-4">
+                        <div className="relative flex gap-3 sm:gap-4">
                           <div className="relative z-10 flex-shrink-0">
-                            <div className="w-10 h-10 rounded-xl bg-white border-2 border-[#9f0712]/20 flex items-center justify-center">
-                              <svg className="w-5 h-5 text-[#9f0712]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white border-2 border-[#9f0712]/20 flex items-center justify-center">
+                              <svg className="w-4 h-4 sm:w-5 sm:h-5 text-[#9f0712]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                               </svg>
                             </div>
                           </div>
-                          <div className="flex-1 pt-1">
-                            <div className="bg-gradient-to-r from-[#9f0712]/5 to-[#7f000a]/5 rounded-xl p-4 border border-[#9f0712]/10">
+                          <div className="flex-1 pt-0.5 sm:pt-1">
+                            <div className="bg-gradient-to-r from-[#9f0712]/5 to-[#7f000a]/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-[#9f0712]/10">
                               <p className="text-sm font-semibold text-slate-800 mb-1">Submit Your Proof</p>
-                              <p className="text-sm text-slate-600 leading-relaxed">Complete the form below and upload your payment proof</p>
+                              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">Complete the form below and upload your payment proof</p>
                             </div>
                           </div>
                         </div>
