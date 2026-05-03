@@ -76,6 +76,23 @@ const baseShell = ({
         transform: translateZ(0) scale(1) !important;
         -webkit-transform: translateZ(0) scale(1) !important;
       }
+      
+      /* Payment details mobile fixes */
+      .mobile-payment-details {
+        padding: 20px 16px !important;
+        margin: 20px 0 0 0 !important;
+      }
+      .mobile-payment-details h3 {
+        font-size: 14px !important;
+        margin: 0 0 16px 0 !important;
+      }
+      .mobile-payment-details p {
+        font-size: 13px !important;
+      }
+      .mobile-payment-details #accountNumber {
+        font-size: 16px !important;
+        padding: 6px 10px !important;
+      }
     }
     
     /* Dark mode support */
@@ -346,14 +363,14 @@ export const emailTemplates = {
           <div style="margin:32px 0;padding:28px;background:#faf9f7;border-left:3px solid #873218;">
             <h2 style="margin:0 0 20px 0;font-size:14px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Secure a Spot</h2>
             <p style="margin:0 0 16px 0;font-size:14px;color:#444;line-height:1.8;">
-              To secure your place in the program, please submit the scholarship commitment fee of <strong style="color:#873218;font-size:16px;">N50,000</strong>. This covers:
+              Applicants will receive up to 100% tuition (N 447,000) scholarships off their tuition fees
             </p>
-            <ul style="margin:0 0 20px 0;padding:0 0 0 20px;color:#555;font-size:13px;line-height:1.9;">
-              <li>95% tuition scholarship coverage (N447,000 value)</li>
-              <li>Comprehensive curriculum materials</li>
-              <li>Professional mentorship and career support</li>
-              <li>Lifetime community membership</li>
-            </ul>
+            <p style="margin:0 0 16px 0;font-size:14px;color:#444;line-height:1.8;">
+              Learn beginner-friendly tech and digital skills, go from zero to job-ready, get internships/jobs placement support and join a community that supports your growth
+            </p>
+            <p style="margin:0 0 16px 0;font-size:14px;color:#444;line-height:1.8;">
+              Pay the sum of: N50,000 for a 4 month classroom access
+            </p>
             <div style="margin:24px 0;">
               <label style="display:block;margin:0 0 8px 0;font-size:13px;font-weight:600;color:#873218;letter-spacing:0.5px;">
                 SELECT YOUR COURSE
@@ -378,23 +395,13 @@ export const emailTemplates = {
               Please submit your payment proof after completing the transaction. Access credentials will follow verification.
             </p>
             
-            <div id="paymentDetails" style="margin:28px 0 0 0;padding:28px;background:#faf9f7;border-left:3px solid #873218;">
+            <div id="paymentDetails" class="mobile-payment-details" style="margin:28px 0 0 0;padding:28px 20px;background:#faf9f7;border:1px solid #e0dcd8;border-radius:8px;">
               <h3 style="margin:0 0 20px 0;font-size:13px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Payment Details</h3>
               
               <div style="margin:0 0 16px 0;padding:16px;background:#ffffff;border:1px solid #e0dcd8;border-radius:4px;">
                 <p style="margin:0 0 8px 0;font-size:12px;color:#666;font-weight:600;">MONIEPOINT MFB</p>
                 <p style="margin:0 0 4px 0;font-size:14px;color:#2a2a2a;font-weight:600;">Account Name: <span style="color:#873218;">Precious Chibueze Amah</span></p>
                 <p style="margin:0 0 8px 0;font-size:14px;color:#2a2a2a;font-weight:600;">Account Number: <span id="accountNumber" style="color:#873218;background:#fff8e7;padding:4px 8px;border-radius:4px;font-family:monospace;user-select:all;cursor:text;">6729652572</span></p>
-                <div style="text-align:center;margin:12px 0 0 0;">
-                  <button onclick="try{navigator.clipboard.writeText('6729652572');this.innerHTML='<svg width=\\'16\\' height=\\'16\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\'><rect x=\\'9\\' y=\\'9\\' width=\\'13\\' height=\\'13\\' rx=\\'2\\' ry=\\'2\\'></rect><path d=\\'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\\'></path></svg> ✓ Copied!';this.style.background='#28a745';setTimeout(function(){this.innerHTML='<svg width=\\'16\\' height=\\'16\\' viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'2\\' stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\'><rect x=\\'9\\' y=\\'9\\' width=\\'13\\' height=\\'13\\' rx=\\'2\\' ry=\\'2\\'></rect><path d=\\'M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1\\'></path></svg> Copy Account Number';this.style.background='#873218';}.bind(this),2000);}catch(e){console.log('Copy not supported');}" 
-                          style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#873218;color:#ffffff;border:none;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.3s ease;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                    <span>Copy Account Number</span>
-                  </button>
-                                  </div>
               </div>
               
               <div style="margin:0 0 20px 0;padding:16px;background:#faf9f7;border:1px solid #e0dcd8;border-radius:4px;">
