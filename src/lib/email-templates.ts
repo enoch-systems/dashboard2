@@ -39,40 +39,33 @@ const baseShell = ({
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title}</title>
 </head>
-<body style="margin:0;padding:0;background:#f3f4f6;font-family:Arial,Helvetica,sans-serif;color:#111827;">
+<body style="margin:0;padding:0;background:#f8f6f4;font-family:'Georgia','Times New Roman',serif;color:#2a2a2a;line-height:1.8;">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;">${preheader}</div>
-  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#f3f4f6;padding:24px 12px;">
+  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="background:#f8f6f4;padding:40px 20px;">
     <tr>
       <td align="center">
-        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;background:#ffffff;border-radius:14px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.08);">
+        <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="max-width:600px;background:#ffffff;border:1px solid #e0dcd8;">
           <tr>
             <td>
               <img
                 src="${BANNER_TOP_IMAGE_URL}"
                 alt="Tech Trailblazer Academy"
-                width="640"
-                style="display:block;width:100%;max-width:640px;height:auto;border:0;outline:none;text-decoration:none;"
+                width="600"
+                style="display:block;width:100%;max-width:600px;height:auto;border:0;outline:none;text-decoration:none;"
               >
             </td>
           </tr>
           <tr>
-            <td style="padding:28px 24px;">${body}</td>
-          </tr>
-          <tr>
-            <td style="padding:0 24px 24px 24px;">
-              <img
-                src="${BANNER_BOTTOM_IMAGE_URL}"
-                alt="Tech Trailblazer Academy"
-                width="592"
-                style="display:block;width:100%;max-width:592px;height:auto;border-radius:10px;border:0;outline:none;text-decoration:none;"
-              >
+            <td style="padding:40px 48px 32px 48px;border-bottom:3px solid #873218;">
+              ${body}
             </td>
           </tr>
           <tr>
-            <td style="padding:18px 24px 26px 24px;background:#f8fafc;border-top:1px solid #e5e7eb;">
-              <p style="margin:0 0 6px 0;font-size:14px;color:#111827;"><strong>Warm regards,</strong></p>
-              <p style="margin:0 0 4px 0;font-size:14px;color:#111827;">Programs Team, Tech Trailblazer Academy</p>
-              <p style="margin:0;font-size:12px;color:#6b7280;">Copyright &copy; 2026 Tech Trailblazer Academy. All rights reserved.</p>
+            <td style="padding:24px 48px;background:#faf9f7;border-top:1px solid #e0dcd8;">
+              <p style="margin:0 0 4px 0;font-size:13px;color:#555;font-weight:600;letter-spacing:0.5px;">Warm regards,</p>
+              <p style="margin:0 0 2px 0;font-size:13px;color:#555;">Programs Team</p>
+              <p style="margin:0 0 16px 0;font-size:13px;color:#873218;font-weight:600;">Tech Trailblazer Academy</p>
+              <p style="margin:0;font-size:11px;color:#999;">Copyright &copy; 2026 Tech Trailblazer Academy. All rights reserved.</p>
             </td>
           </tr>
         </table>
@@ -227,73 +220,132 @@ export function getEmailSubject(emailType: string, data: EmailData) {
 export const emailTemplates = {
   welcome: (data: EmailData): string =>
     (() => {
-      const awardMailDate = String(data.scholarshipDecisionDate || data.scholarshipDate || "4th December, 2025");
       const classStartDate = String(data.startDate || KICKOFF_DATE);
       const orientationDate = String(data.orientationDate || "20th May, 2026 at 10:00 AM");
       const whatsappLink = String(data.communityWhatsappLink || data.groupLink || "https://chat.whatsapp.com/Bi5XuFToVdjBPRvIawWz5W");
 
       return baseShell({
-        title: "Congratulations! You've been selected for our Tech Scholarship Program",
-        preheader: `${data.studentName}, your scholarship application has been officially approved!`,
+        title: "Scholarship Application Approved",
+        preheader: `${data.studentName}, your scholarship application has been officially approved.`,
         body: `
-          <p style="margin:0 0 12px 0;font-size:16px;line-height:1.7;color:#111827;">Dear ${data.studentName},</p>
-          <p style="margin:0 0 20px 0;font-size:16px;line-height:1.8;color:#111827;"><strong>Congratulations! You've been selected for our Tech Scholarship Program 🎉</strong></p>
+          <p style="margin:0 0 32px 0;font-size:15px;color:#2a2a2a;">Dear ${data.studentName},</p>
+          
+          <p style="margin:0 0 24px 0;font-size:16px;color:#873218;font-weight:600;">Congratulations. Your scholarship application has been approved.</p>
+          
+          <p style="margin:0 0 20px 0;font-size:14px;color:#444;line-height:1.9;">
+            After careful review of your application, we are pleased to inform you that you have been selected for the Tech Trailblazer Academy Scholarship Program. Your demonstrated commitment to professional growth and interest in technology distinguished your application from a competitive pool of candidates.
+          </p>
+          
+          <p style="margin:0 0 20px 0;font-size:14px;color:#444;line-height:1.9;">
+            This scholarship provides comprehensive training in <strong style="color:#2a2a2a;">${normalizeCourseName(data.courseName) || "your selected discipline"}</strong>. ${courseCareerHint(data.courseName)}
+          </p>
 
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            I am thrilled to inform you that your application to join our scholarship program has been officially approved. Out of a highly competitive pool of applicants, your passion for technology and your commitment to growth truly stood out.
-          </p>
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            Choosing to learn a new tech skill is a significant step toward shaping your future, and we are honored to support you on this journey. This scholarship is designed to provide you with the resources, mentorship, and community support you need to excel in today's digital landscape.
-          </p>
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            Your selected track in <strong>${normalizeCourseName(data.courseName) || "your chosen field"}</strong> will equip you with cutting-edge skills. ${courseCareerHint(data.courseName)}
-          </p>
-        
-          <p style="margin:0 0 10px 0;font-size:16px;line-height:1.8;color:#111827;"><strong>Next Steps to Get Started:</strong></p>
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            To confirm your spot and begin your journey, please take note of the following:
-          </p>
-          <div style="margin:0 0 20px 0;padding:16px;border:1px solid #d1fae5;border-radius:8px;background:#ecfdf5;">
-            <p style="margin:0 0 8px 0;font-size:14px;color:#065f46;"><strong>• Orientation Session:</strong> ${orientationDate}</p>
-            <p style="margin:0 0 8px 0;font-size:14px;color:#065f46;"><strong>• Platform Access:</strong> You will receive a separate email shortly with your login credentials and setup instructions.</p>
-            <p style="margin:0;font-size:14px;color:#065f46;"><strong>• Required Materials:</strong> Ensure you have access to a reliable computer and a stable internet connection.</p>
+          <div style="margin:32px 0;padding:28px 0;border-top:1px solid #e0dcd8;border-bottom:1px solid #e0dcd8;">
+            <h2 style="margin:0 0 20px 0;font-size:14px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Program Details</h2>
+            
+            <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:0;">
+              <tr>
+                <td style="padding:12px 0;border-bottom:1px solid #f0eeec;">
+                  <p style="margin:0;font-size:13px;color:#666;">Program Start Date</p>
+                  <p style="margin:4px 0 0 0;font-size:14px;color:#2a2a2a;font-weight:600;">${classStartDate}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:12px 0;border-bottom:1px solid #f0eeec;">
+                  <p style="margin:0;font-size:13px;color:#666;">Orientation Session</p>
+                  <p style="margin:4px 0 0 0;font-size:14px;color:#2a2a2a;font-weight:600;">${orientationDate}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:12px 0;border-bottom:1px solid #f0eeec;">
+                  <p style="margin:0;font-size:13px;color:#666;">Program Duration</p>
+                  <p style="margin:4px 0 0 0;font-size:14px;color:#2a2a2a;font-weight:600;">${PROGRAM_DURATION}</p>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:12px 0 0 0;">
+                  <p style="margin:0;font-size:13px;color:#666;">Platform Access</p>
+                  <p style="margin:4px 0 0 0;font-size:14px;color:#2a2a2a;">Login credentials will be sent separately within 24 hours.</p>
+                </td>
+              </tr>
+            </table>
           </div>
-        
-          <p style="margin:0 0 10px 0;font-size:15px;line-height:1.9;color:#111827;"><strong>Let us show you what is possible:</strong></p>
-          <ul style="margin:0 0 18px 0;padding-left:20px;color:#111827;font-size:15px;line-height:1.9;">
-            <li style="margin-bottom:8px;"><strong>Toluwani</strong> built a real-time intelligent payment platform during the scholarship program.</li>
-            <li style="margin-bottom:8px;"><strong>Chidera</strong> transitioned into AI and started building practical disease prediction systems.</li>
-            <li style="margin-bottom:8px;"><strong>Amarachi</strong> landed a full-stack developer role after earning her certification.</li>
-            <li style="margin-bottom:8px;"><strong>Oluwaseun</strong> built Goldex, a crypto and fiat converter, as a bootcamp project.</li>
-            <li style="margin-bottom:0;"><strong>Adebayo</strong> passed ISC2 cybersecurity certification within two months of joining the program.</li>
-          </ul>
 
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            We believe that with the right skills, you can solve real-world problems and lead the next wave of innovation. Get ready to work hard, stay curious, and push the boundaries of what you thought possible.
-          </p>
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">
-            Classes are scheduled to commence on <strong>${classStartDate}</strong>. Get ready for an immersive, hands-on experience designed to transform your career.
-          </p>
+          <div style="margin:32px 0;padding:28px 0;border-bottom:1px solid #e0dcd8;">
+            <h2 style="margin:0 0 20px 0;font-size:14px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Required Materials</h2>
+            <p style="margin:0 0 12px 0;font-size:14px;color:#444;">Please ensure you have the following before the program begins:</p>
+            <ul style="margin:0;padding:0 0 0 20px;color:#444;font-size:14px;line-height:2;">
+              <li>Reliable computer (Windows, Mac, or Linux)</li>
+              <li>Stable internet connection (minimum 5 Mbps)</li>
+              <li>Quiet workspace conducive to learning</li>
+            </ul>
+          </div>
 
-          <p style="margin:0 0 10px 0;font-size:14px;line-height:1.9;color:#111827;">
-            <strong>NB:</strong> To join our community for mentorship sessions and scholarship updates, use the WhatsApp link below before spaces fill up.
-          </p>
-          <div style="text-align:center;margin:0 0 18px 0;">
-            <a href="${whatsappLink}" style="display:block;margin:0 auto 10px auto;max-width:440px;background:#25D366;color:#ffffff;text-decoration:none;padding:12px 16px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:.2px;text-transform:uppercase;">
-              <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
-                <svg width="17" height="17" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true" style="display:inline-block;vertical-align:middle;">
+          <div style="margin:32px 0;padding:28px;background:#faf9f7;border-left:3px solid #873218;">
+            <h2 style="margin:0 0 20px 0;font-size:14px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Secure a Spot</h2>
+            <p style="margin:0 0 16px 0;font-size:14px;color:#444;line-height:1.8;">
+              To secure your place in the program, please submit the scholarship commitment fee of <strong style="color:#873218;font-size:16px;">N50,000</strong>. This covers:
+            </p>
+            <ul style="margin:0 0 20px 0;padding:0 0 0 20px;color:#555;font-size:13px;line-height:1.9;">
+              <li>95% tuition scholarship coverage (N447,000 value)</li>
+              <li>Comprehensive curriculum materials</li>
+              <li>Professional mentorship and career support</li>
+              <li>Lifetime community membership</li>
+            </ul>
+            <div style="margin:24px 0;">
+              <label style="display:block;margin:0 0 8px 0;font-size:13px;font-weight:600;color:#873218;letter-spacing:0.5px;">
+                SELECT YOUR COURSE
+              </label>
+              <select style="display:block;width:100%;padding:12px 16px;border:1px solid #d4c4b8;background:#ffffff;font-size:14px;color:#444;font-family:inherit;">
+                <option value="">Choose a course...</option>
+                <option value="Cybersecurity">Cybersecurity</option>
+                <option value="Data Science">Data Science</option>
+                <option value="AI Automation">AI Automation</option>
+                <option value="Computer Networking">Computer Networking</option>
+                <option value="Ethical Hacking">Ethical Hacking</option>
+                <option value="UI/UX Design">UI/UX Design</option>
+                <option value="Full Stack Development">Full Stack Development</option>
+                <option value="Frontend Development">Frontend Development</option>
+                <option value="Backend Development">Backend Development</option>
+                <option value="Web Development">Web Development</option>
+                <option value="Digital Marketing">Digital Marketing</option>
+                <option value="Cloud Computing">Cloud Computing</option>
+              </select>
+            </div>
+            <div style="text-align:center;margin:24px 0 0 0;">
+              <a href="https://your-payment-link.com/pay?student=${data.studentName}&email=${data.email}" 
+                 style="display:inline-block;padding:14px 40px;background:#873218;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;letter-spacing:0.5px;"
+                 target="_blank">
+                Complete Enrollment Payment
+              </a>
+            </div>
+            <p style="margin:16px 0 0 0;font-size:12px;color:#888;text-align:center;">
+              Please submit your payment proof after completing the transaction. Access credentials will follow verification.
+            </p>
+            
+            <div style="margin:28px 0 0 0;padding:28px;background:#faf9f7;border-left:3px solid #873218;text-align:center;">
+              <h3 style="margin:0 0 16px 0;font-size:13px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Submit Payment Proof</h3>
+              <a href="https://ttacademycohort1.vercel.app/payment" target="_blank" style="color:#873218;text-decoration:underline;font-size:14px;font-weight:600;">https://ttacademycohort1.vercel.app/payment</a>
+            </div>
+          </div>
+
+          <div style="margin:32px 0;padding:28px 0;border-bottom:1px solid #e0dcd8;">
+            <h2 style="margin:0 0 20px 0;font-size:14px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Community Access</h2>
+            <p style="margin:0 0 20px 0;font-size:14px;color:#444;line-height:1.8;">
+              Join our professional community for program updates, networking opportunities, and mentorship sessions.
+            </p>
+            <div style="text-align:left;">
+              <a href="${whatsappLink}" style="display:inline-flex;align-items:center;gap:10px;padding:12px 24px;background:#25D366;color:#ffffff;text-decoration:none;font-size:13px;font-weight:600;">
+                <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor">
                   <path d="M16.02 3.2C8.95 3.2 3.2 8.94 3.2 16.01c0 2.23.58 4.42 1.69 6.35L3.1 28.8l6.62-1.74a12.8 12.8 0 0 0 6.3 1.62h.01c7.06 0 12.8-5.74 12.8-12.81A12.8 12.8 0 0 0 16.02 3.2Zm0 23.36h-.01a10.52 10.52 0 0 1-5.36-1.48l-.39-.23-3.93 1.03 1.05-3.84-.25-.4a10.52 10.52 0 0 1-1.61-5.63c0-5.82 4.69-10.56 10.5-10.56 2.81 0 5.45 1.09 7.43 3.08a10.46 10.46 0 0 1 3.08 7.45c0 5.82-4.73 10.56-10.51 10.56Zm5.77-7.87c-.32-.16-1.9-.94-2.2-1.04-.3-.1-.51-.16-.73.16-.22.32-.84 1.04-1.03 1.25-.19.22-.38.24-.7.08-.32-.16-1.37-.5-2.61-1.61-.97-.86-1.62-1.93-1.81-2.25-.19-.32-.02-.5.14-.66.14-.14.32-.38.48-.56.16-.19.22-.32.32-.54.1-.22.05-.4-.03-.56-.08-.16-.73-1.76-1-2.42-.27-.64-.54-.55-.73-.56-.19-.01-.41-.01-.63-.01s-.56.08-.85.4c-.29.32-1.12 1.09-1.12 2.66 0 1.57 1.15 3.08 1.31 3.29.16.22 2.25 3.44 5.45 4.82.76.33 1.36.53 1.82.68.77.24 1.47.2 2.02.12.62-.09 1.9-.78 2.17-1.54.27-.75.27-1.4.19-1.54-.08-.14-.29-.22-.6-.37Z"/>
                 </svg>
-                <span>Click Here To Join The WhatsApp Scholarship Community</span>
-              </span>
-            </a>
+                <span>Join Community</span>
+              </a>
+            </div>
           </div>
-        
-          <p style="margin:0 0 16px 0;font-size:15px;line-height:1.9;color:#111827;">Welcome to the community! We can't wait to see what you will build.</p>
-          <p style="margin:0;font-size:15px;line-height:1.9;color:#111827;">
-            Warm regards,<br>
-            Programs Team<br>
-            Tech Trailblazer Academy
+
+          <p style="margin:0;font-size:14px;color:#444;line-height:1.8;">
+            We look forward to supporting your professional development. Should you have any questions, please do not hesitate to contact our programs team.
           </p>
         `,
       });
