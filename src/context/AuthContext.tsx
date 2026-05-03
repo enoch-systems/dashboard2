@@ -1,80 +1,146 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { supabase } from '@/lib/supabase';
+import { User, Session } from '@supabase/supabase-js';
 
 interface AuthContextType {
-  user: { id: string; email: string } | null;
+  user: User | null;
+  session: Session | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: { message: string } | null }>;
   signOut: () => Promise<void>;
+  resetPassword: (email: string) => Promise<{ error: { message: string } | null }>;
+  updatePassword: (newPassword: string) => Promise<{ error: { message: string } | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<{ id: string; email: string } | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Initialize auth state and listen for changes
   useEffect(() => {
-    const getInitialSession = async () => {
+    // Get initial session
+    const initSession = async () => {
       try {
-        const response = await fetch('/api/admin-auth/session', {
-          method: 'GET',
-          cache: 'no-store',
-          credentials: 'include',
-        });
-        const result = await response.json().catch(() => null);
-        if (result?.authenticated && result?.user) {
-          setUser(result.user);
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
         } else {
-          setUser(null);
+          setSession(initialSession);
+          setUser(initialSession?.user || null);
         }
       } catch (error) {
-        console.error('Error getting auth session:', error);
-        setUser(null);
+        console.error('Error initializing session:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    getInitialSession();
+    initSession();
+
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        console.log('Auth state changed:', event);
+        setSession(currentSession);
+        setUser(currentSession?.user || null);
+        setLoading(false);
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signIn = async (email: string, password: string) => {
     try {
-      const response = await fetch('/api/admin-auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ email, password }),
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
       });
-      const result = await response.json().catch(() => null);
 
-      if (!response.ok) {
-        return { error: { message: result?.error || 'Login failed' } };
+      if (error) {
+        return { error: { message: error.message } };
       }
 
-      if (result?.user) {
-        setUser(result.user);
+      if (data?.user) {
+        setUser(data.user);
+        setSession(data.session);
       }
+      
       return { error: null };
-    } catch (error) {
-      return { error: { message: 'Login failed' } };
+    } catch (error: any) {
+      return { error: { message: error?.message || 'Login failed' } };
     }
   };
 
   const signOut = async () => {
     try {
-      await fetch('/api/admin-auth/logout', {
-        method: 'POST',
-        credentials: 'include',
-      });
-    } finally {
+      await supabase.auth.signOut();
       setUser(null);
+      setSession(null);
+    } catch (error) {
+      console.error('Error signing out:', error);
     }
   };
 
+  const resetPassword = async (email: string) => {
+    try {
+      // Only allow specific emails to receive password reset
+      const allowedEmails = ['amahchibu@gmail.com'];
+      const normalizedEmail = email.toLowerCase().trim();
+      
+      if (!allowedEmails.includes(normalizedEmail)) {
+        return { error: { message: 'Email not authorized for password reset' } };
+      }
+
+      const { error } = await supabase.auth.resetPasswordForEmail(normalizedEmail, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        return { error: { message: error.message } };
+      }
+
+      return { error: null };
+    } catch (error: any) {
+      return { error: { message: error?.message || 'Failed to send reset email' } };
+    }
+  };
+
+  const updatePassword = async (newPassword: string) => {
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) {
+        return { error: { message: error.message } };
+      }
+
+      return { error: null };
+    } catch (error: any) {
+      return { error: { message: error?.message || 'Failed to update password' } };
+    }
+  };
+
+  const value = {
+    user,
+    session,
+    loading,
+    signIn,
+    signOut,
+    resetPassword,
+    updatePassword,
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

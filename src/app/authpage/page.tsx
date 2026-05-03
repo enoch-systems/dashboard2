@@ -1,14 +1,21 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function AuthPage() {
-  const { signIn } = useAuth();
+  const { signIn, user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      window.location.href = "/";
+    }
+  }, [user]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,13 +23,15 @@ export default function AuthPage() {
     setError("");
 
     try {
-      const { error } = await signIn(email, password);
-      if (error) throw new Error(error.message);
-
-      // Redirect to admin dashboard on success
-      window.location.href = "/";
+      const result = await signIn(email, password);
+      if (result.error) {
+        setError(result.error.message);
+      } else {
+        // Successful login - redirect to dashboard
+        window.location.href = "/";
+      }
     } catch (err: any) {
-      setError(err.message || "Login failed");
+      setError(err?.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -130,6 +139,16 @@ export default function AuthPage() {
                 className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? "Logging in..." : "Login as Admin"}
+              </button>
+            </div>
+
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={() => window.location.href = "/forgot-password"}
+                className="text-sm text-gray-400 hover:text-gray-300 transition-colors"
+              >
+                Forgot your password?
               </button>
             </div>
           </form>
