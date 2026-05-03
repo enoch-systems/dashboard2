@@ -16,7 +16,7 @@ type SubmissionState =
   | null;
 
 const inputClassName =
-  "w-full rounded-2xl border border-stone-200 bg-white px-4 py-3.5 text-sm text-slate-900 shadow-sm outline-none transition focus:border-[#9f0712] focus:ring-4 focus:ring-[#9f0712]/10";
+  "w-full rounded-lg border border-gray-200 bg-white px-4 py-3.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-gray-400 focus:ring-4 focus:ring-gray-400/10";
 
 export function PaymentUploadForm() {
   const [formData, setFormData] = useState<PaymentFormData>({
@@ -157,68 +157,65 @@ export function PaymentUploadForm() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f0f0] text-white">
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(120,120,120,0.12)_1px,transparent_1px),linear-gradient(90deg,rgba(120,120,120,0.12)_1px,transparent_1px)] bg-[size:72px_72px]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(159,7,18,0.12),_transparent_28%),radial-gradient(circle_at_bottom_left,_rgba(0,0,0,0.08),_transparent_30%)]" />
+    <div className="min-h-screen bg-gray-50">
+      <div className="relative">
         <div className="relative mx-auto max-w-4xl px-3 py-6 sm:px-4 sm:py-10 lg:px-8 lg:py-14">
           <div className="flex justify-center">
-            <div className="w-full max-w-2xl space-y-6 rounded-[24px] sm:rounded-[30px] border border-[#9f0712]/15 bg-white/85 p-4 text-slate-900 shadow-[0_20px_60px_rgba(159,7,18,0.08)] backdrop-blur sm:p-8">
-              <div className="inline-flex items-center rounded-full border border-[#9f0712]/15 bg-[#9f0712] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-white">
+            <div className="w-full max-w-2xl space-y-6 rounded-lg bg-white p-4 text-gray-900 shadow-sm sm:p-8">
+              <div className="inline-flex items-center rounded-full bg-gray-100 px-3 py-1.5 text-xs font-semibold text-gray-600">
                 Tech Trailblazer Academy
               </div>
 
               <div className="space-y-5">
-                <div className="inline-flex bg-gradient-to-r from-[#9f0712] to-[#7f000a] px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold uppercase tracking-[0.24em] text-white shadow-lg shadow-[#9f0712]/20">
+                <div className="inline-flex bg-gray-900 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-semibold text-white">
                   Payment & Proof Submission
                 </div>
                 <div className="space-y-3">
-                  <h1 className="text-2xl font-black uppercase tracking-tight text-[#9f0712] sm:text-4xl md:text-5xl lg:text-6xl">
-                    Payment <span className="text-slate-950">& Proof</span>
+                  <h1 className="text-2xl font-bold text-gray-900 sm:text-4xl md:text-5xl lg:text-6xl">
+                    Payment & Proof
                   </h1>
-                  <div className="inline-flex border-2 border-slate-900 bg-gradient-to-r from-white to-slate-50 px-3 py-1.5 text-sm font-black uppercase tracking-wide text-slate-950 shadow-sm sm:px-5 sm:py-2 sm:text-lg">
+                  <div className="inline-flex bg-gray-100 px-3 py-1.5 text-sm font-semibold text-gray-700 sm:px-5 sm:py-2 sm:text-lg">
                     Minimal Form
                   </div>
                 </div>
-                <div className="space-y-4 rounded-[20px] bg-gradient-to-r from-[#9f0712]/5 to-[#7f000a]/5 p-3 sm:p-4 border border-[#9f0712]/10">
-                  <div className="space-y-5 rounded-[20px] bg-white p-4 sm:p-6 border border-[#9f0712]/20 shadow-sm">
+                <div className="space-y-4 rounded-lg bg-gray-50 p-3 sm:p-4">
+                  <div className="space-y-5 bg-white p-4 sm:p-6 rounded-lg">
                     <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#9f0712] to-[#7f000a] flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gray-900 flex items-center justify-center flex-shrink-0">
                         <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-base sm:text-lg font-bold text-slate-900">Payment Details</h3>
-                        <p className="text-xs text-slate-500">Transfer to this account</p>
+                        <h3 className="text-base sm:text-lg font-semibold text-gray-900">Payment Details</h3>
+                        <p className="text-xs text-gray-500">Transfer to this account</p>
                       </div>
                     </div>
 
                     <div className="space-y-3 sm:space-y-4">
-                      <div className="bg-gradient-to-r from-slate-50 to-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border-2 border-slate-100">
+                      <div className="bg-gray-50 rounded-lg p-3 sm:p-5 border border-gray-200">
                         <div className="flex items-center justify-between mb-2 sm:mb-3">
-                          <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Bank</span>
-                          <span className="px-2 py-1 bg-[#9f0712]/10 text-[#9f0712] text-xs font-semibold rounded-full">MFB</span>
+                          <span className="text-xs font-semibold text-gray-500 uppercase">Bank</span>
+                          <span className="px-2 py-1 bg-gray-200 text-gray-700 text-xs font-semibold rounded-full">MFB</span>
                         </div>
-                        <p className="text-sm sm:text-base font-bold text-slate-800">MONIEPOINT MFB</p>
+                        <p className="text-sm sm:text-base font-medium text-gray-900">MONIEPOINT MFB</p>
                       </div>
 
-                      <div className="bg-gradient-to-r from-slate-50 to-white rounded-xl sm:rounded-2xl p-3 sm:p-5 border-2 border-slate-100">
-                        <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1 sm:mb-2">Account Name</span>
-                        <p className="text-sm sm:text-base font-semibold text-slate-800">Precious Chibueze Amah</p>
+                      <div className="bg-gray-50 rounded-lg p-3 sm:p-5 border border-gray-200">
+                        <span className="text-xs font-semibold text-gray-500 uppercase block mb-1 sm:mb-2">Account Name</span>
+                        <p className="text-sm sm:text-base font-medium text-gray-900">Precious Chibueze Amah</p>
                       </div>
 
-                      <div className="bg-gradient-to-r from-[#9f0712]/5 to-[#7f000a]/5 rounded-xl sm:rounded-2xl p-3 sm:p-5 border-2 border-[#9f0712]/20 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-20 h-20 bg-[#9f0712]/5 rounded-full -translate-y-1/2 translate-x-1/2" />
+                      <div className="bg-gray-100 rounded-lg p-3 sm:p-5 border border-gray-300">
                         <div className="relative">
                           <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-semibold text-[#9f0712]/60 uppercase tracking-wider">Account Number</span>
+                            <span className="text-xs font-semibold text-gray-600 uppercase">Account Number</span>
                             <button
                               onClick={handleCopyAccountNumber}
-                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                                 copiedAccountNumber
-                                  ? "bg-emerald-100 text-emerald-700"
-                                  : "bg-[#9f0712]/10 text-[#9f0712] hover:bg-[#9f0712]/20"
+                                  ? "bg-green-100 text-green-700"
+                                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                               }`}
                             >
                               {copiedAccountNumber ? (
@@ -234,35 +231,35 @@ export function PaymentUploadForm() {
                               )}
                             </button>
                           </div>
-                          <p className="text-xl sm:text-2xl font-black text-[#9f0712] tracking-wider">6729652572</p>
+                          <p className="text-xl sm:text-2xl font-mono font-bold text-gray-900 tracking-wider">6729652572</p>
                         </div>
                       </div>
                     </div>
 
                     <div className="relative">
                       <div className="flex items-center gap-2 mb-4 sm:mb-5">
-                        <div className="w-1 h-5 bg-gradient-to-b from-[#9f0712] to-[#7f000a] rounded-full flex-shrink-0" />
-                        <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wide">How to Complete Your Payment</h4>
+                        <div className="w-1 h-5 bg-gray-400 rounded-full flex-shrink-0" />
+                        <h4 className="text-sm font-semibold text-gray-900 uppercase">How to Complete Your Payment</h4>
                       </div>
 
                       <div className="relative space-y-0">
                         {/* Timeline line */}
-                        <div className="absolute left-5 top-4 bottom-4 w-0.5 bg-gradient-to-b from-slate-200 via-[#9f0712]/20 to-slate-200" />
+                        <div className="absolute left-5 top-4 bottom-4 w-0.5 bg-gray-300" />
 
                         {/* Step 1 */}
                         <div className="relative flex gap-3 sm:gap-4 pb-4 sm:pb-6">
                           <div className="relative z-10 flex-shrink-0">
-                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#9f0712] to-[#7f000a] flex items-center justify-center shadow-lg shadow-[#9f0712]/20">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gray-900 flex items-center justify-center">
                               <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4 4" />
                               </svg>
                             </div>
                           </div>
                           <div className="flex-1 pt-0.5 sm:pt-1">
-                            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border border-slate-100 shadow-sm">
-                              <p className="text-sm font-semibold text-slate-800 mb-1">Make the Transfer</p>
-                              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                                Transfer <span className="font-bold text-[#9f0712]">N50,000</span> to the Moniepoint account shown above
+                            <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
+                              <p className="text-sm font-semibold text-gray-900 mb-1">Make the Transfer</p>
+                              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                                Transfer <span className="font-bold text-gray-900">N50,000</span> to Moniepoint account shown above
                               </p>
                             </div>
                           </div>
@@ -278,9 +275,9 @@ export function PaymentUploadForm() {
                             </div>
                           </div>
                           <div className="flex-1 pt-0.5 sm:pt-1">
-                            <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border border-slate-100 shadow-sm">
-                              <p className="text-sm font-semibold text-slate-800 mb-1">Save Your Receipt</p>
-                              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">Capture and save your payment receipt or screenshot</p>
+                            <div className="bg-white rounded-lg p-3 sm:p-4 border border-gray-200">
+                              <p className="text-sm font-semibold text-gray-900 mb-1">Save Your Receipt</p>
+                              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">Capture and save your payment receipt or screenshot</p>
                             </div>
                           </div>
                         </div>
@@ -295,9 +292,9 @@ export function PaymentUploadForm() {
                             </div>
                           </div>
                           <div className="flex-1 pt-0.5 sm:pt-1">
-                            <div className="bg-gradient-to-r from-[#9f0712]/5 to-[#7f000a]/5 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-[#9f0712]/10">
-                              <p className="text-sm font-semibold text-slate-800 mb-1">Submit Your Proof</p>
-                              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">Complete the form below and upload your payment proof</p>
+                            <div className="bg-gray-100 rounded-lg p-3 sm:p-4 border border-gray-300">
+                              <p className="text-sm font-semibold text-gray-900 mb-1">Submit Your Proof</p>
+                              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed">Complete the form below and upload your payment proof</p>
                             </div>
                           </div>
                         </div>
@@ -306,7 +303,7 @@ export function PaymentUploadForm() {
                   </div>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-slate-800">
+                      <label className="mb-2 block text-sm font-semibold text-gray-800">
                         Full Name *
                       </label>
                       <input
@@ -321,7 +318,7 @@ export function PaymentUploadForm() {
                     </div>
 
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-slate-800">
+                      <label className="mb-2 block text-sm font-semibold text-gray-800">
                         Email Address *
                       </label>
                       <input
@@ -336,7 +333,7 @@ export function PaymentUploadForm() {
                     </div>
 
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-slate-800">
+                      <label className="mb-2 block text-sm font-semibold text-gray-800">
                         Amount Paid *
                       </label>
                       <input
@@ -354,30 +351,58 @@ export function PaymentUploadForm() {
                     </div>
 
                     <div>
-                      <label className="mb-2 block text-sm font-semibold text-slate-800">
+                      <label className="mb-2 block text-sm font-semibold text-gray-800">
                         Proof of Payment *
                       </label>
-                      <div className="rounded-[24px] border border-dashed border-stone-300 bg-[#faf6f6] p-4">
-                        <input
-                          key={fileInputKey}
-                          type="file"
-                          accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
-                          onChange={handleFileChange}
-                          required
-                          className="w-full text-sm text-slate-700 file:mr-4 file:rounded-full file:border-0 file:bg-[#9f0712] file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-white hover:file:bg-[#7f000a]"
-                        />
-                        <p className="mt-3 text-xs text-slate-500">
-                          Upload images (JPG, PNG, etc.), PDF, or document files (Word, Excel, PowerPoint).
-                        </p>
+                      <div className={`rounded-lg border-2 border-dashed p-6 transition-all duration-200 ${
+                        formData.proofImage 
+                          ? 'border-blue-300 bg-blue-50' 
+                          : 'border-gray-300 bg-gray-50 hover:border-gray-400'
+                      }`}>
+                        <div className="text-center">
+                          <input
+                            key={fileInputKey}
+                            type="file"
+                            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx"
+                            onChange={handleFileChange}
+                            required
+                            className="hidden"
+                            id="file-upload"
+                          />
+                          <label 
+                            htmlFor="file-upload" 
+                            className={`cursor-pointer inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                              formData.proofImage
+                                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                : 'bg-gray-900 text-white hover:bg-gray-800'
+                            }`}
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            {formData.proofImage ? 'Change File' : 'Choose File'}
+                          </label>
+                          {formData.proofImage && (
+                            <div className="mt-3 flex items-center justify-center gap-2 text-sm text-green-600 font-medium">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              {formData.proofImage.name}
+                            </div>
+                          )}
+                          <p className="mt-4 text-xs text-gray-500 leading-relaxed max-w-sm mx-auto">
+                            Upload images (JPG, PNG, etc.), PDF, or document files (Word, Excel, PowerPoint).
+                          </p>
+                        </div>
                       </div>
                     </div>
 
                     <button
                       type="submit"
                       disabled={!isFormValid || isSubmitting}
-                      className={`inline-flex w-full items-center justify-center rounded-2xl px-5 py-4 text-sm font-semibold text-white transition-all ${
+                      className={`inline-flex w-full items-center justify-center rounded-lg px-5 py-4 text-sm font-semibold text-white transition-colors ${
                         isFormValid
-                          ? 'bg-blue-600 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/25'
+                          ? 'bg-blue-600 hover:bg-blue-700'
                           : 'bg-gray-300 cursor-not-allowed opacity-60'
                       } ${isSubmitting ? 'cursor-not-allowed opacity-60' : ''}`}
                     >
@@ -398,17 +423,17 @@ export function PaymentUploadForm() {
           />
           <div
             aria-live="polite"
-            className={`relative w-full max-w-md rounded-3xl border p-6 text-center shadow-2xl sm:p-7 ${
+            className={`relative w-full max-w-md rounded-2xl border p-6 text-center shadow-lg sm:p-7 ${
               submissionState.type === "success"
-                ? "border-emerald-200 bg-white text-emerald-900"
-                : "border-rose-200 bg-white text-rose-800"
+                ? "border-green-200 bg-white text-green-900"
+                : "border-red-200 bg-white text-red-800"
             }`}
           >
             <p className="text-base font-semibold leading-7">{submissionState.message}</p>
             <button
               type="button"
               onClick={() => setSubmissionState(null)}
-              className="mt-5 inline-flex rounded-xl bg-[#9f0712] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#7f000a]"
+              className="mt-5 inline-flex rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-gray-800"
             >
               Close
             </button>
@@ -422,7 +447,7 @@ export function PaymentUploadForm() {
           showToast ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0 pointer-events-none"
         }`}
       >
-        <div className="flex items-center gap-2 bg-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl shadow-emerald-600/30">
+        <div className="flex items-center gap-2 bg-green-600 text-white px-5 py-3 rounded-lg shadow-lg shadow-green-600/30">
           <CheckCircle className="w-5 h-5" />
           <span className="font-semibold text-sm">Account number copied!</span>
         </div>
