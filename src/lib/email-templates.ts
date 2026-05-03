@@ -318,8 +318,8 @@ export const emailTemplates = {
           <p style="margin:0 0 20px 0;font-size:14px;color:#444;line-height:1.9;">
             This scholarship provides comprehensive training in <strong style="color:#2a2a2a;">${normalizeCourseName(data.courseName) || "your selected discipline"}</strong>. ${courseCareerHint(data.courseName)}
           </p>
-
-          <div style="margin:32px 0;padding:28px 0;border-top:1px solid #e0dcd8;border-bottom:1px solid #e0dcd8;">
+        
+        <div style="margin:32px 0;padding:28px 0;border-top:1px solid #e0dcd8;border-bottom:1px solid #e0dcd8;">
             <h2 style="margin:0 0 20px 0;font-size:14px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Program Details</h2>
             
             <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin:0;">
@@ -395,34 +395,9 @@ export const emailTemplates = {
               Please submit your payment proof after completing the transaction. Access credentials will follow verification.
             </p>
             
-            <div id="paymentDetails" class="mobile-payment-details" style="margin:28px 0 0 0;padding:28px 20px;background:#faf9f7;border:1px solid #e0dcd8;border-radius:8px;">
-              <h3 style="margin:0 0 20px 0;font-size:13px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Payment Details</h3>
-              
-              <div style="margin:0 0 16px 0;padding:16px;background:#ffffff;border:1px solid #e0dcd8;border-radius:4px;">
-                <p style="margin:0 0 8px 0;font-size:12px;color:#666;font-weight:600;">MONIEPOINT MFB</p>
-                <p style="margin:0 0 4px 0;font-size:14px;color:#2a2a2a;font-weight:600;">Account Name: <span style="color:#873218;">Precious Chibueze Amah</span></p>
-                <p style="margin:0 0 8px 0;font-size:14px;color:#2a2a2a;font-weight:600;">Account Number: <span id="accountNumber" style="color:#873218;background:#fff8e7;padding:4px 8px;border-radius:4px;font-family:monospace;user-select:all;cursor:text;">6729652572</span></p>
-              </div>
-              
-              <div style="margin:0 0 20px 0;padding:16px;background:#faf9f7;border:1px solid #e0dcd8;border-radius:4px;">
-                <p style="margin:0 0 12px 0;font-size:12px;color:#873218;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:8px;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M12 16v-4"></path>
-                    <path d="M12 8h.01"></path>
-                  </svg>
-                  Payment Instructions
-                </p>
-                <ol style="margin:0;padding:0 0 0 20px;color:#555;font-size:12px;line-height:1.8;">
-                  <li style="margin:0 0 8px 0;">Transfer N50,000 to the account above</li>
-                  <li style="margin:0 0 8px 0;">Save your payment receipt or screenshot</li>
-                  <li style="margin:0;">Click the link below to submit proof</li>
-                </ol>
-              </div>
-              
-              <div style="text-align:center;padding:16px 0 0 0;border-top:1px solid #e0dcd8;">
-                <p style="margin:0 0 12px 0;font-size:12px;color:#666;">After payment, submit your proof here:</p>
-                <a href="https://ttacademycohort1.vercel.app/payment" target="_blank" class="mobile-link" style="color:#873218;text-decoration:underline;font-size:14px;font-weight:600;word-break:break-all;display:inline-block;max-width:100%;">https://ttacademycohort1.vercel.app/payment</a>
+            <div id="paymentDetails" style="margin:28px 0 0 0;padding:24px 20px;background:#faf9f7;border:1px solid #e0dcd8;border-radius:8px;">
+              <div style="text-align:center;">
+                <a href="https://ttacademycohort1.vercel.app/payment" target="_blank" style="display:inline-block;padding:14px 32px;background:#873218;color:#ffffff;text-decoration:none;font-size:14px;font-weight:600;border-radius:6px;">Tap to Secure Your Spot</a>
               </div>
             </div>
           </div>
@@ -433,9 +408,9 @@ export const emailTemplates = {
               Join our professional community for program updates, networking opportunities, and mentorship sessions.
             </p>
             <div style="text-align:left;">
-              <a href="https://chat.whatsapp.com/Bi5XuFToVdjBPRvIawWz5W" style="display:inline-flex;align-items:center;gap:10px;padding:12px 24px;background:#25D366;color:#ffffff;text-decoration:none;font-size:13px;font-weight:600;min-width:180px;justify-content:center;">
-                <svg width="16" height="16" viewBox="0 0 32 32" fill="currentColor">
-                  <path d="M16.02 3.2C8.95 3.2 3.2 8.94 3.2 16.01c0 2.23.58 4.42 1.69 6.35L3.1 28.8l6.62-1.74a12.8 12.8 0 0 0 6.3 1.62h.01c7.06 0 12.8-5.74 12.8-12.81A12.8 12.8 0 0 0 16.02 3.2Zm0 23.36h-.01a10.52 10.52 0 0 1-5.36-1.48l-.39-.23-3.93 1.03 1.05-3.84-.25-.4a10.52 10.52 0 0 1-1.61-5.63c0-5.82 4.69-10.56 10.5-10.56 2.81 0 5.45 1.09 7.43 3.08a10.46 10.46 0 0 1 3.08 7.45c0 5.82-4.73 10.56-10.51 10.56Zm5.77-7.87c-.32-.16-1.9-.94-2.2-1.04-.3-.1-.51-.16-.73.16-.22.32-.84 1.04-1.03 1.25-.19.22-.38.24-.7.08-.32-.16-1.37-.5-2.61-1.61-.97-.86-1.62-1.93-1.81-2.25-.19-.32-.02-.5.14-.66.14-.14.32-.38.48-.56.16-.19.22-.32.32-.54.1-.22.05-.4-.03-.56-.08-.16-.73-1.76-1-2.42-.27-.64-.54-.55-.73-.56-.19-.01-.41-.01-.63-.01s-.56.08-.85.4c-.29.32-1.12 1.09-1.12 2.66 0 1.57 1.15 3.08 1.31 3.29.16.22 2.25 3.44 5.45 4.82.76.33 1.36.53 1.82.68.77.24 1.47.2 2.02.12.62-.09 1.9-.78 2.17-1.54.27-.75.27-1.4.19-1.54-.08-.14-.29-.22-.6-.37Z"/>
+              <a href="https://t.me/techblazeracademy" style="display:inline-flex;align-items:center;gap:10px;padding:12px 24px;background:#0088cc;color:#ffffff;text-decoration:none;font-size:13px;font-weight:600;min-width:180px;justify-content:center;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
                 </svg>
                 <span>Join Community</span>
               </a>
